@@ -3,220 +3,171 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Futbol Penaltı Oyunu</title>
+  <title>1 Euro Katlama Simülatörü</title>
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body {
-      background: #1a2a3a;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
+      background: #0d1117; color: #c9d1d9;
+      display: flex; justify-content: center; align-items: center;
+      min-height: 100vh; margin: 0; padding: 20px;
     }
     .card {
-      background: #243b55;
-      padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      width: 100%;
-      max-width: 420px;
-      text-align: center;
+      background: #161b22; border: 1px solid #30363d;
+      padding: 25px; border-radius: 16px;
+      width: 100%; max-width: 480px; text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
-    h1, h2 { margin-top: 0; color: #4facfe; }
-    input, select, button {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-      font-size: 16px;
+    h1 { color: #58a6ff; margin-top: 0; font-size: 24px; }
+    .balance-box {
+      background: #21262d; border: 2px solid #238636;
+      border-radius: 12px; padding: 15px; margin: 15px 0;
     }
-    input, select {
-      background: #141e30;
-      color: #fff;
-    }
-    button {
-      background: #00f2fe;
-      background: linear-gradient(to right, #4facfe, #00f2fe);
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s, opacity 0.2s;
-    }
-    button:hover { opacity: 0.9; transform: scale(1.02); }
-    .hidden { display: none; }
+    .balance-title { font-size: 14px; color: #8b949e; margin-bottom: 5px; }
+    .balance-amount { font-size: 32px; font-weight: bold; color: #2ea043; }
     
-    /* Saha ve Oyun Alanı */
-    .field {
-      background: #2e7d32;
-      border: 3px solid #fff;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px 0;
-      position: relative;
+    .section {
+      background: #21262d; border-radius: 10px;
+      padding: 15px; margin-bottom: 12px; text-align: left;
     }
-    .goal {
-      border: 4px solid #fff;
-      border-bottom: none;
-      height: 80px;
-      background: rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      font-size: 28px;
+    .section-title { font-weight: bold; color: #f0f6fc; margin-bottom: 10px; font-size: 15px; }
+    
+    .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+    button {
+      flex: 1; min-width: 45%; padding: 10px;
+      border: none; border-radius: 6px; font-weight: bold;
+      cursor: pointer; transition: 0.2s; font-size: 13px;
     }
-    .controls {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-    }
-    .scoreboard {
-      display: flex;
-      justify-content: space-between;
-      background: #141e30;
-      padding: 10px 15px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-    }
+    .btn-primary { background: #238636; color: #fff; }
+    .btn-primary:hover { background: #2ea043; }
+    .btn-risk { background: #da3633; color: #fff; }
+    .btn-risk:hover { background: #f85149; }
+    .btn-biz { background: #1f6feb; color: #fff; }
+    .btn-biz:hover { background: #388bfd; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+
     .log {
-      font-weight: bold;
-      min-height: 24px;
-      margin: 10px 0;
+      background: #0d1117; border: 1px solid #30363d;
+      border-radius: 6px; padding: 10px; height: 80px;
+      overflow-y: auto; font-size: 12px; font-family: monospace;
+      color: #8b949e; text-align: left; margin-top: 15px;
     }
+    .log-item { margin-bottom: 4px; }
+    .success { color: #3fb950; }
+    .danger { color: #f85149; }
   </style>
 </head>
 <body>
 
 <div class="card">
-  <!-- 1. Ekran: Oyuncu İsmi & Takım Seçimi -->
-  <div id="setup-screen">
-    <h1>Karakter Oluştur</h1>
-    <label for="playerName">Oyuncu Adı:</label>
-    <input type="text" id="playerName" placeholder="Adınızı girin..." value="Kaptan">
-    
-    <label for="teamSelect">Takım Seçin:</label>
-    <select id="teamSelect">
-      <option value="Galatasaray">Galatasaray 🦁</option>
-      <option value="Fenerbahçe">Fenerbahçe 🦅</option>
-      <option value="Beşiktaş">Beşiktaş 🦅</option>
-      <option value="Trabzonspor">Trabzonspor 🌊</option>
-      <option value="Real Madrid">Real Madrid 👑</option>
-      <option value="Barcelona">Barcelona 🔵🔴</option>
-    </select>
-    
-    <button onclick="startGame()">Saha Çık!</button>
+  <h1>💶 1 Euro Katlama Simülatörü</h1>
+  
+  <div class="balance-box">
+    <div class="balance-title">Cüzdandaki Paranız</div>
+    <div class="balance-amount"><span id="money">1.00</span> €</div>
   </div>
 
-  <!-- 2. Ekran: Penaltı Oyunu -->
-  <div id="game-screen" class="hidden">
-    <div class="scoreboard">
-      <div><span id="displayTeam"></span></div>
-      <div>Gol: <b id="score">0</b> / <span id="shotsLeft">5</span></div>
-    </div>
-
-    <div class="field">
-      <div class="goal">
-        <span id="gk-position">🧤</span>
-      </div>
-      <p style="margin-top: 15px;">⚽ Top başındasın, **<span id="displayName"></span>**!</p>
-    </div>
-
-    <div id="statusLog" class="log">Şut çekeceğin yönü seç:</div>
-
-    <div class="controls">
-      <button onclick="shoot('Sol')">⬅️ Sol</button>
-      <button onclick="shoot('Orta')">⬆️ Orta</button>
-      <button onclick="shoot('Sağ')">➡️ Sağ</button>
+  <!-- 1. Küçük Ticaret -->
+  <div class="section">
+    <div class="section-title">🛒 Pazarda Katlama (Sıfır Risk)</div>
+    <div class="btn-group">
+      <button class="btn-primary" id="btn-water" onclick="doTrade('water', 1, 1.5, 'Su sattın')">Su Sat (1€ ➔ 1.5€)</button>
+      <button class="btn-primary" id="btn-coffee" onclick="doTrade('coffee', 5, 8, 'Kahve sattın')" disabled>Kahve Sat (5€ ➔ 8€)</button>
     </div>
   </div>
 
-  <!-- 3. Ekran: Sonuç -->
-  <div id="result-screen" class="hidden">
-    <h2>Maç Bitti!</h2>
-    <p id="finalText"></p>
-    <button onclick="resetGame()">Yeniden Oyna</button>
+  <!-- 2. Risk Yolu -->
+  <div class="section">
+    <div class="section-title">🎲 Şans / Risk (2x ya da Kaybet)</div>
+    <div class="btn-group">
+      <button class="btn-risk" onclick="gamble(0.5)">Paranın Yarısını Katla (%50)</button>
+      <button class="btn-risk" onclick="gamble(1.0)">HEPSİNİ Katla (%50)</button>
+    </div>
+  </div>
+
+  <!-- 3. Pasif Gelir -->
+  <div class="section">
+    <div class="section-title">🏢 Otomatik Gelir (Saniyede Kazan)</div>
+    <div class="btn-group">
+      <button class="btn-biz" id="btn-stand" onclick="buyBusiness('stand', 20, 0.5, 'Limon tezgahı')" disabled>Limon Tezgâhı (20€) [+0.5€/s]</button>
+      <button class="btn-biz" id="btn-shop" onclick="buyBusiness('shop', 100, 3, 'Büfe')" disabled>Büfe Aç (100€) [+3€/s]</button>
+    </div>
+  </div>
+
+  <div class="log" id="logBox">
+    <div class="log-item">Cebinde 1 Euro ile başladın. Başarılar!</div>
   </div>
 </div>
 
 <script>
-  let player = { name: "", team: "" };
-  let score = 0;
-  let shotsLeft = 5;
+  let money = 1.00;
+  let incomePerSec = 0;
 
-  function startGame() {
-    const nameInput = document.getElementById("playerName").value.trim();
-    if (!nameInput) {
-      alert("Lütfen bir isim girin!");
-      return;
-    }
-
-    player.name = nameInput;
-    player.team = document.getElementById("teamSelect").value;
-
-    document.getElementById("displayName").innerText = player.name;
-    document.getElementById("displayTeam").innerText = player.team;
-
-    document.getElementById("setup-screen").classList.add("hidden");
-    document.getElementById("game-screen").classList.remove("hidden");
-  }
-
-  function shoot(direction) {
-    if (shotsLeft <= 0) return;
-
-    const directions = ['Sol', 'Orta', 'Sağ'];
-    const gkChoice = directions[Math.floor(Math.random() * directions.length)];
-    const log = document.getElementById("statusLog");
-
-    // Kaleci ikonu konumu göster
-    const gkIcon = document.getElementById("gk-position");
-    if (gkChoice === 'Sol') gkIcon.innerText = "🧤 🥅 🥅";
-    else if (gkChoice === 'Orta') gkIcon.innerText = "🥅 🧤 🥅";
-    else gkIcon.innerText = "🥅 🥅 🧤";
-
-    shotsLeft--;
-    document.getElementById("shotsLeft").innerText = shotsLeft;
-
-    if (direction !== gkChoice) {
-      score++;
-      document.getElementById("score").innerText = score;
-      log.innerHTML = `<span style="color: #4caf50;">GOL! 🎉 (${direction} köşeye attın, kaleci ${gkChoice}'a atladı)</span>`;
-    } else {
-      log.innerHTML = `<span style="color: #f44336;">KAÇTI! ❌ (Kaleci ${gkChoice} yönünü kurtardı)</span>`;
-    }
-
-    if (shotsLeft === 0) {
-      setTimeout(endGame, 1200);
-    }
-  }
-
-  function endGame() {
-    document.getElementById("game-screen").classList.add("hidden");
-    document.getElementById("result-screen").classList.remove("hidden");
+  function updateUI() {
+    document.getElementById('money').innerText = money.toFixed(2);
     
-    let text = `${player.name} (${player.team}), 5 penaltı atışından <b>${score}</b> gol attın.`;
-    if (score >= 4) text += "<br>🔥 Harika bir performans, yıldız oyuncusun!";
-    else if (score >= 2) text += "<br>👍 Fena değil, ama biraz daha antrenman lazım.";
-    else text += "<br>😅 Bugün şansın pek yaver gitmedi.";
+    // Buton durumlarını paraya göre güncelle
+    document.getElementById('btn-water').disabled = money < 1;
+    document.getElementById('btn-coffee').disabled = money < 5;
+    document.getElementById('btn-stand').disabled = money < 20;
+    document.getElementById('btn-shop').disabled = money < 100;
 
-    document.getElementById("finalText").innerHTML = text;
+    if (money <= 0) {
+      log("İflas ettin! Oyuna yeniden başlamak için sayfayı yenile.", "danger");
+    }
   }
 
-  function resetGame() {
-    score = 0;
-    shotsLeft = 5;
-    document.getElementById("score").innerText = score;
-    document.getElementById("shotsLeft").innerText = shotsLeft;
-    document.getElementById("statusLog").innerText = "Şut çekeceğin yönü seç:";
-    document.getElementById("gk-position").innerText = "🧤";
-
-    document.getElementById("result-screen").classList.add("hidden");
-    document.getElementById("setup-screen").classList.remove("hidden");
+  function log(msg, type = "") {
+    const box = document.getElementById('logBox');
+    const div = document.createElement('div');
+    div.className = `log-item ${type}`;
+    div.innerText = `> ${msg}`;
+    box.appendChild(div);
+    box.scrollTop = box.scrollHeight;
   }
+
+  function doTrade(item, cost, returnVal, name) {
+    if (money >= cost) {
+      money -= cost;
+      const profit = returnVal;
+      money += profit;
+      log(`${name}! Net Kar: +${(returnVal - cost).toFixed(2)}€`, "success");
+      updateUI();
+    }
+  }
+
+  function gamble(ratio) {
+    if (money <= 0) return;
+    const bet = money * ratio;
+    const win = Math.random() < 0.5;
+
+    if (win) {
+      money += bet;
+      log(`RİSK TUTTU! +${bet.toFixed(2)}€ kazandın.`, "success");
+    } else {
+      money -= bet;
+      log(`RİSK BATTI! -${bet.toFixed(2)}€ kaybettin.`, "danger");
+    }
+    updateUI();
+  }
+
+  function buyBusiness(type, cost, cps, name) {
+    if (money >= cost) {
+      money -= cost;
+      incomePerSec += cps;
+      log(`${name} satın aldın! Saniyede +${cps}€ kazanıyorsun.`, "success");
+      updateUI();
+    }
+  }
+
+  // Pasif Gelir Döngüsü
+  setInterval(() => {
+    if (incomePerSec > 0 && money > 0) {
+      money += incomePerSec;
+      updateUI();
+    }
+  }, 1000);
+
+  updateUI();
 </script>
 
 </body>
