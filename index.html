@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FİDA 2027</title>
+    <title>FİDA 2027 - Futbolcu Kariyeri</title>
     <style>
         * {
             box-sizing: border-box;
@@ -28,7 +28,7 @@
             border-bottom: 3px solid #00d2d3;
             padding-bottom: 10px;
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
         }
 
         h1 {
@@ -40,13 +40,13 @@
 
         .subtitle {
             font-size: 1rem;
-            color: #55e6c1;
+            color: #00d2d3;
             font-weight: bold;
         }
 
         .container {
             width: 100%;
-            max-width: 850px;
+            max-width: 950px;
             background-color: #f7ffff;
             border: 2px solid #00d2d3;
             border-radius: 15px;
@@ -54,7 +54,6 @@
             box-shadow: 0 10px 20px rgba(0, 210, 211, 0.15);
         }
 
-        /* İSİM GİRİŞ EKRANI */
         #login-section {
             text-align: center;
             padding: 20px 0;
@@ -86,8 +85,8 @@
             background-color: #00d2d3;
             color: #ffffff;
             border: none;
-            padding: 12px 30px;
-            font-size: 1.1rem;
+            padding: 12px 25px;
+            font-size: 1rem;
             font-weight: bold;
             border-radius: 25px;
             cursor: pointer;
@@ -100,7 +99,6 @@
             transform: translateY(-2px);
         }
 
-        /* TEKLİF EKRANI */
         #offers-section {
             display: none;
         }
@@ -114,19 +112,18 @@
 
         .offers-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
         }
 
         .club-card {
             background: #ffffff;
             border: 2px solid #e0ffff;
-            border-top: 5px solid #00d2d3;
+            border-top: 6px solid #00d2d3;
             border-radius: 12px;
-            padding: 18px;
+            padding: 20px;
             text-align: center;
             transition: all 0.3s ease;
-            position: relative;
         }
 
         .club-card:hover {
@@ -135,42 +132,59 @@
             box-shadow: 0 8px 15px rgba(0, 210, 211, 0.2);
         }
 
-        .club-badge {
-            width: 60px;
-            height: 60px;
+        /* ÖZEL LOGO ALANI */
+        .club-logo {
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            margin: 0 auto 10px auto;
+            margin: 0 auto 12px auto;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #fff;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            border: 3px solid #ffffff;
         }
 
         .club-name {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: #005b5b;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            font-weight: bold;
         }
 
         .club-info {
             font-size: 0.85rem;
-            color: #555;
+            color: #333;
             text-align: left;
-            margin: 10px 0;
-            line-height: 1.6;
+            margin: 12px 0;
+            line-height: 1.5;
             background-color: #f0ffff;
-            padding: 8px 12px;
+            padding: 10px 12px;
             border-radius: 8px;
+            border-left: 3px solid #00d2d3;
         }
 
         .club-info strong {
             color: #008b8b;
         }
 
-        /* SEÇİLEN TAKIM EKRANI */
+        .squad-box {
+            display: none;
+            margin-top: 10px;
+            text-align: left;
+            font-size: 0.78rem;
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #e0ffff;
+            max-height: 150px;
+            overflow-y: auto;
+            color: #444;
+        }
+
         #game-dashboard {
             display: none;
             text-align: center;
@@ -189,109 +203,114 @@
 
     <header>
         <h1>FİDA 2027</h1>
-        <div class="subtitle">FUTBOL MENAJERLİK KARİYERİ</div>
+        <div class="subtitle">FUTBOLCU KARİYERİ MODU</div>
     </header>
 
     <div class="container">
         
-        <!-- 1. ADIM: İSİM GİRİŞİ -->
+        <!-- İSİM GİRİŞİ -->
         <div id="login-section">
-            <h2>Menajer Kaydı</h2>
-            <p style="margin-top: 8px; color: #666;">Kariyerine başlamak için adını gir:</p>
+            <h2>Kariyerine Başla</h2>
+            <p style="margin-top: 8px; color: #666;">Oyuncu adını ve soyadını gir:</p>
             <div class="input-group">
-                <input type="text" id="manager-name" placeholder="Menajer Adı Soyadı" autocomplete="off">
+                <input type="text" id="player-name" placeholder="Futbolcu Adı" autocomplete="off">
             </div>
-            <button class="btn" onclick="startCareer()">Kariyere Başla</button>
+            <button class="btn" onclick="startPlayerCareer()">Oyuncu Oluştur</button>
         </div>
 
-        <!-- 2. ADIM: TEKLİFLER -->
+        <!-- TEKLİFLER EKRANI -->
         <div id="offers-section">
             <div class="welcome-msg">
-                Hoş geldin <strong id="display-name" style="color: #00a8a8;"></strong>! Sana teklif gönderen kulüpler aşağıda:
+                Süper yetenek <strong id="display-name" style="color: #00a8a8;"></strong>! Menajerin sana gelen transfer tekliflerini sundu:
             </div>
             <div class="offers-grid" id="clubs-container"></div>
         </div>
 
-        <!-- 3. ADIM: SEÇİLEN KULÜP EKRANI (DEVAMI İÇİN HAZIR ALAN) -->
+        <!-- OYUN DAHBOARD -->
         <div id="game-dashboard">
-            <h2 style="color: #005b5b;">Kariyer Başladı!</h2>
+            <h2 style="color: #005b5b;">Transfer Tamamlandı!</h2>
             <div class="selected-box" id="selected-club-info"></div>
         </div>
 
     </div>
 
     <script>
-        // KULÜPLER, LOGO RENKLERİ, TD VE OYUNCU VERİLERİ
+        // KULÜPLER, TEKNİK DİREKTÖRLER VE SİZİN SAĞLADIĞINIZ TAM KADROLAR
         const clubs = [
             {
                 name: "Amedspor",
-                league: "Trendyol 1. Lig",
-                badgeBg: "#008000", // Yeşil/Kırmızı
-                badgeText: "AMD",
-                td: "Ersun Yanal",
-                starPlayer: "Britt Assombalonga",
-                budget: "1.5M €"
+                td: "Besnik Hasi",
+                logoBg: "linear-gradient(135deg, #008000, #d63031)",
+                logoCode: "AMD",
+                gk: ["Erce Kardeşler", "Abdulsamed Damlu"],
+                def: ["Murat Uçar", "Mehmet Yeşil", "Kahraman Demirtaş", "Hasan Ali Kaldırım", "Celal Hanalp", "Ayaz Arslan", "Tarkan Serbest", "Oleksandr Syrota", "Oğuzhan Matur"],
+                mid: ["Sinan Kurt", "Çekdar Orhan", "Adama Traore", "Dia Saba", "Atakan Müjde", "Cem Üstündağ"],
+                fwd: ["Felix Afena-Gyan", "Daniel Moreno", "Mbaye Diagne", "Florent Hasani", "Emrah Başsan", "Zdravko Minchev Dimitrov", "Dilhan Demir"]
             },
             {
                 name: "Ipswich Town",
-                league: "Premier League",
-                badgeBg: "#003399", // Mavi
-                badgeText: "IPS",
-                td: "Kieran McKenna",
-                starPlayer: "Liam Delap",
-                budget: "12M €"
-            },
-            {
-                name: "Köln",
-                league: "2. Bundesliga",
-                badgeBg: "#d63031", // Kırmızı/Beyaz
-                badgeText: "KOE",
-                td: "Gerhard Struber",
-                starPlayer: "Davie Selke",
-                budget: "5M €"
-            },
-            {
-                name: "Fiorentina",
-                league: "Serie A",
-                badgeBg: "#6c5ce7", // Mor
-                badgeText: "FIO",
-                td: "Raffaele Palladino",
-                starPlayer: "Moise Kean",
-                budget: "15M €"
-            },
-            {
-                name: "Getafe",
-                league: "La Liga",
-                badgeBg: "#0984e3", // Mavi
-                badgeText: "GET",
-                td: "José Bordalás",
-                starPlayer: "Borja Mayoral",
-                budget: "8M €"
+                td: "Gary O'Neil",
+                logoBg: "linear-gradient(135deg, #003399, #0984e3)",
+                logoCode: "IPS",
+                gk: ["Christian Walton", "Alex Palmer", "Cieran Slicker"],
+                def: ["Harry Clarke", "Leif Davis", "Darnell Furlong", "Jacob Greaves", "Ben Johnson", "Cédric Kipré", "Dara O'Shea", "Elkan Baggott", "Abdoul Ouattara"],
+                mid: ["Azor Matusiwa", "Cameron Humphreys", "Jack Taylor", "Marcelino Núñez", "Wes Burns", "Chiedozie Ogbene", "Sam Szmodics", "Julio Enciso"],
+                fwd: ["George Hirst", "Chuba Akpom", "Ali Al-Hamadi", "Jaden Philogene", "Kasey McAteer", "Anis Mehmeti", "Sindre Walle Egeli", "Jack Clarke"]
             },
             {
                 name: "Paris FC",
-                league: "Ligue 2",
-                badgeBg: "#1e3799", // Koyu Mavi
-                badgeText: "PFC",
-                td: "Stéphane Gilli",
-                starPlayer: "Jean-Philippe Krasso",
-                budget: "3M €"
+                td: "Liam Rosenior",
+                logoBg: "linear-gradient(135deg, #1e3799, #00d2d3)",
+                logoCode: "PFC",
+                gk: ["Obed Nkambadio", "Kevin Trapp"],
+                def: ["Otávio", "Tuomas Ollila", "Thibault De Smet", "Nhoa Sangui", "Moustapha Mbow", "Samir Chergui", "Hamari Traoré"],
+                mid: ["Vincent Marchetti", "Adama Camara", "Mathieu Cafaro", "Pierre Lees-Melou", "Maxime Lopez", "Ilan Kebbal", "Rudy Matondo"],
+                fwd: ["Jean-Philippe Krasso", "Alimami Gory", "Willem Geubbels", "Jonathan Ikoné", "Moses Simon", "Luca Koleosho", "Ciro Immobile"]
+            },
+            {
+                name: "Getafe",
+                td: "José Bordalás",
+                logoBg: "linear-gradient(135deg, #0984e3, #00d2d3)",
+                logoCode: "GET",
+                gk: ["David Soria", "Jiří Letáček"],
+                def: ["Abdel Abqar", "Djene Dakonam", "J. Ives Valou", "Davinchi", "Juan Berrocal", "Andrés García", "Boselli", "Zaid Romero", "Kiko Femenía", "Ismael Bekhoucha"],
+                mid: ["Javi Muñoz", "Mario Martín", "Christantus Uche", "Ramón Terrats", "Yvan Neyou", "Coba da Costa"],
+                fwd: ["Juanmi", "Peter Federico", "Álex Sancris", "Borja Mayoral", "Martín Satriano"]
+            },
+            {
+                name: "1. FC Köln",
+                td: "René Wagner",
+                logoBg: "linear-gradient(135deg, #d63031, #ffffff)",
+                logoCode: "KOE",
+                gk: ["Marvin Schwäbe", "Ron-Robert Zieler", "Matthias Köbbing"],
+                def: ["Jahmai Simpson-Pusey", "Rav van den Berg", "Joël Schmied", "Julian Pauli", "Luka Lochoshvili", "Timo Hübers", "Elias Bakatukanda", "Sebastian Sebulonsen", "Jusuf Gazibegovic"],
+                mid: ["Tom Krauß", "Fayssal Harchaoui", "Ísak Jóhannesson", "Said El Mala", "Jan Thielmann", "Linton Maina", "Jakub Kamiński", "Florian Kainz", "Denis Huseinbasic"],
+                fwd: ["Ragnar Ache", "Marius Bülter", "Luca Waldschmidt", "Youssoupha Niang", "Imad Rondić", "Malek El Mala", "Fynn Schenten", "Thijs Dallinga"]
+            },
+            {
+                name: "Fiorentina",
+                td: "Fabio Grosso",
+                logoBg: "linear-gradient(135deg, #6c5ce7, #a29bfe)",
+                logoCode: "FIO",
+                gk: ["David De Gea", "Pietro Terracciano", "Tommaso Martinelli"],
+                def: ["Dodô", "Michael Kayode", "Robin Gosens", "Fabiano Parisi", "Luca Ranieri", "Marin Pongračić", "Matías Moreno", "Nicolás Valentini", "Pietro Comuzzo"],
+                mid: ["Rolando Mandragora", "Danilo Cataldi", "Cher Ndour", "Arthur Atta", "Hans Nicolussi Caviglia", "Edoardo Bove", "Alessandro Bianco"],
+                fwd: ["Moise Kean", "Albert Gudmundsson", "Riccardo Sottil", "M'Bala Nzola", "Mateo Pellegrino", "Franco Mastantuono"]
             }
         ];
 
-        let managerName = "";
+        let playerName = "";
 
-        function startCareer() {
-            const nameInput = document.getElementById("manager-name").value.trim();
+        function startPlayerCareer() {
+            const nameInput = document.getElementById("player-name").value.trim();
             if (nameInput === "") {
-                alert("Lütfen menajer adınızı girin!");
+                alert("Lütfen bir futbolcu adı girin!");
                 return;
             }
 
-            managerName = nameInput;
-            document.getElementById("display-name").innerText = managerName;
+            playerName = nameInput;
+            document.getElementById("display-name").innerText = playerName;
 
-            // Ekran değiştir
             document.getElementById("login-section").style.display = "none";
             document.getElementById("offers-section").style.display = "block";
 
@@ -303,37 +322,57 @@
             container.innerHTML = "";
 
             clubs.forEach((club, index) => {
+                const totalPlayers = club.gk.length + club.def.length + club.mid.length + club.fwd.length;
                 const card = document.createElement("div");
                 card.className = "club-card";
                 card.innerHTML = `
-                    <div class="club-badge" style="background-color: ${club.badgeBg}">${club.badgeText}</div>
+                    <div class="club-logo" style="background: ${club.logoBg}">${club.logoCode}</div>
                     <div class="club-name">${club.name}</div>
                     <div class="club-info">
-                        <strong>Lig:</strong> ${club.league}<br>
-                        <strong>Mevcut TD:</strong> ${club.td}<br>
-                        <strong>Yıldız Oyuncu:</strong> ${club.starPlayer}<br>
-                        <strong>Bütçe:</strong> ${club.budget}
+                        <strong>Teknik Direktör:</strong> ${club.td}<br>
+                        <strong>Kadro Genişliği:</strong> ${totalPlayers} Oyuncu<br>
+                        <strong>Öne Çıkanlar:</strong> ${club.fwd[0]}, ${club.mid[0]}
                     </div>
-                    <button class="btn" style="width: 100%; margin-top: 10px;" onclick="selectClub(${index})">Teklifi Kabul Et</button>
+                    
+                    <button class="btn" style="width: 100%; margin-bottom: 8px;" onclick="signContract(${index})">İmzayı At</button>
+                    <button class="btn" style="width: 100%; background-color: #63cdda;" onclick="toggleSquad(${index})">Kadroyu İncele</button>
+                    
+                    <div class="squad-box" id="squad-${index}">
+                        <strong>Kaleciler:</strong> ${club.gk.join(", ")}<br><br>
+                        <strong>Defans:</strong> ${club.def.join(", ")}<br><br>
+                        <strong>Orta Saha:</strong> ${club.mid.join(", ")}<br><br>
+                        <strong>Forvet:</strong> ${club.fwd.join(", ")}
+                    </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function selectClub(index) {
+        function toggleSquad(index) {
+            const box = document.getElementById(`squad-${index}`);
+            if (box.style.display === "block") {
+                box.style.display = "none";
+            } else {
+                box.style.display = "block";
+            }
+        }
+
+        function signContract(index) {
             const chosen = clubs[index];
             document.getElementById("offers-section").style.display = "none";
             document.getElementById("game-dashboard").style.display = "block";
 
             document.getElementById("selected-club-info").innerHTML = `
-                <div class="club-badge" style="background-color: ${chosen.badgeBg}; width:80px; height:80px; font-size:1.6rem; margin-bottom:15px;">${chosen.badgeText}</div>
-                <h3 style="font-size: 1.8rem; color: #008b8b;">${chosen.name}</h3>
-                <p style="margin: 10px 0; color: #333;">Tebrikler <strong>${managerName}</strong>! ${chosen.name} kulübünün yeni Teknik Direktörü oldun.</p>
+                <div class="club-logo" style="background: ${chosen.logoBg}; width:90px; height:90px; font-size:1.8rem; margin-bottom:15px;">${chosen.logoCode}</div>
+                <h3 style="font-size: 2rem; color: #008b8b;">${chosen.name}</h3>
+                <p style="margin: 12px 0; color: #333; font-size: 1.1rem;">
+                    Tebrikler <strong>${playerName}</strong>! <strong>${chosen.name}</strong> ile resmi sözleşmeyi imzaladın.
+                </p>
                 <hr style="border: 1px solid #e0ffff; margin: 15px 0;">
-                <p><strong>Transfer Bütçen:</strong> ${chosen.budget}</p>
-                <p><strong>Takım Kaptanı / Yıldızı:</strong> ${chosen.starPlayer}</p>
+                <p><strong>Teknik Direktörün:</strong> ${chosen.td}</p>
+                <p><strong>Yeni Takım Arkadaşların:</strong> ${chosen.fwd[0]}, ${chosen.mid[0]}, ${chosen.gk[0]}</p>
                 <br>
-                <p style="color: #00a8a8; font-weight: bold;">(Sonraki adımlar için oyunu geliştirmeye devam edeceğiz!)</p>
+                <p style="color: #00a8a8; font-weight: bold;">(Sonraki adımda maça çıkma, forma numarası seçme ve antrenman modlarını ekleyeceğiz!)</p>
             `;
         }
     </script>
