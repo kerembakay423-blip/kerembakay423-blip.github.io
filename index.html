@@ -3,170 +3,364 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>1 Euro Katlama Simülatörü</title>
+  <title>1 Euro Katlama 2.0 - Milyoner Yolculuğu</title>
   <style>
     * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body {
       background: #0d1117; color: #c9d1d9;
-      display: flex; justify-content: center; align-items: center;
+      display: flex; justify-content: center; align-items: flex-start;
       min-height: 100vh; margin: 0; padding: 20px;
     }
-    .card {
+    .container {
       background: #161b22; border: 1px solid #30363d;
       padding: 25px; border-radius: 16px;
-      width: 100%; max-width: 480px; text-align: center;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      width: 100%; max-width: 550px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
-    h1 { color: #58a6ff; margin-top: 0; font-size: 24px; }
+    h1 { color: #58a6ff; margin: 0 0 15px 0; text-align: center; font-size: 22px; }
+    
+    /* İlerleme ve Bakiye */
     .balance-box {
       background: #21262d; border: 2px solid #238636;
-      border-radius: 12px; padding: 15px; margin: 15px 0;
+      border-radius: 12px; padding: 15px; text-align: center; margin-bottom: 15px;
     }
-    .balance-title { font-size: 14px; color: #8b949e; margin-bottom: 5px; }
     .balance-amount { font-size: 32px; font-weight: bold; color: #2ea043; }
+    .passive-income { font-size: 13px; color: #8b949e; margin-top: 4px; }
     
-    .section {
-      background: #21262d; border-radius: 10px;
-      padding: 15px; margin-bottom: 12px; text-align: left;
+    .progress-container {
+      background: #0d1117; border-radius: 8px; height: 16px; overflow: hidden; margin-top: 10px; position: relative;
     }
-    .section-title { font-weight: bold; color: #f0f6fc; margin-bottom: 10px; font-size: 15px; }
-    
-    .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
-    button {
-      flex: 1; min-width: 45%; padding: 10px;
-      border: none; border-radius: 6px; font-weight: bold;
-      cursor: pointer; transition: 0.2s; font-size: 13px;
-    }
-    .btn-primary { background: #238636; color: #fff; }
-    .btn-primary:hover { background: #2ea043; }
-    .btn-risk { background: #da3633; color: #fff; }
-    .btn-risk:hover { background: #f85149; }
-    .btn-biz { background: #1f6feb; color: #fff; }
-    .btn-biz:hover { background: #388bfd; }
-    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .progress-bar { background: linear-gradient(90deg, #2ea043, #58a6ff); height: 100%; width: 0%; transition: width 0.3s; }
+    .progress-text { position: absolute; width: 100%; text-align: center; font-size: 10px; top: 1px; color: #fff; font-weight: bold; }
 
-    .log {
-      background: #0d1117; border: 1px solid #30363d;
-      border-radius: 6px; padding: 10px; height: 80px;
-      overflow-y: auto; font-size: 12px; font-family: monospace;
-      color: #8b949e; text-align: left; margin-top: 15px;
+    /* Sekmeler */
+    .tabs { display: flex; gap: 5px; margin-bottom: 15px; }
+    .tab-btn {
+      flex: 1; padding: 8px; background: #21262d; border: 1px solid #30363d;
+      color: #8b949e; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px;
     }
-    .log-item { margin-bottom: 4px; }
-    .success { color: #3fb950; }
-    .danger { color: #f85149; }
+    .tab-btn.active { background: #1f6feb; color: #fff; border-color: #388bfd; }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Kartlar & Butonlar */
+    .card-item {
+      background: #21262d; border-radius: 8px; padding: 12px; margin-bottom: 10px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .card-info { font-size: 13px; }
+    .card-title { font-weight: bold; color: #f0f6fc; }
+    .card-sub { font-size: 11px; color: #8b949e; }
+
+    button.btn {
+      background: #238636; color: #fff; border: none; padding: 8px 12px;
+      border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px;
+    }
+    button.btn:hover { background: #2ea043; }
+    button.btn-danger { background: #da3633; }
+    button.btn-danger:hover { background: #f85149; }
+    button:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* Log Ekrani */
+    .log-box {
+      background: #0d1117; border: 1px solid #30363d; border-radius: 6px;
+      padding: 10px; height: 90px; overflow-y: auto; font-size: 11px;
+      font-family: monospace; color: #8b949e; margin-top: 15px;
+    }
+    .log-entry { margin-bottom: 3px; }
+    .green { color: #3fb950; }
+    .red { color: #f85149; }
+    .yellow { color: #d29922; }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <h1>💶 1 Euro Katlama Simülatörü</h1>
-  
+<div class="container">
+  <h1>🏆 1 Euro Katlama 2.0</h1>
+
   <div class="balance-box">
-    <div class="balance-title">Cüzdandaki Paranız</div>
+    <div style="font-size: 12px; color: #8b949e;">TOPLAM VARLIK</div>
     <div class="balance-amount"><span id="money">1.00</span> €</div>
-  </div>
-
-  <!-- 1. Küçük Ticaret -->
-  <div class="section">
-    <div class="section-title">🛒 Pazarda Katlama (Sıfır Risk)</div>
-    <div class="btn-group">
-      <button class="btn-primary" id="btn-water" onclick="doTrade('water', 1, 1.5, 'Su sattın')">Su Sat (1€ ➔ 1.5€)</button>
-      <button class="btn-primary" id="btn-coffee" onclick="doTrade('coffee', 5, 8, 'Kahve sattın')" disabled>Kahve Sat (5€ ➔ 8€)</button>
+    <div class="passive-income">Pasif Gelir: +<span id="cps">0.00</span> €/sn</div>
+    
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="progress-text" id="progressText">Milyonerliğe %0</div>
     </div>
   </div>
 
-  <!-- 2. Risk Yolu -->
-  <div class="section">
-    <div class="section-title">🎲 Şans / Risk (2x ya da Kaybet)</div>
-    <div class="btn-group">
-      <button class="btn-risk" onclick="gamble(0.5)">Paranın Yarısını Katla (%50)</button>
-      <button class="btn-risk" onclick="gamble(1.0)">HEPSİNİ Katla (%50)</button>
+  <!-- Sekme Menüsü -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('trade')">🛒 Ticaret</button>
+    <button class="tab-btn" onclick="switchTab('crypto')">📈 Kripto</button>
+    <button class="tab-btn" onclick="switchTab('estate')">🏠 Emlak</button>
+    <button class="tab-btn" onclick="switchTab('casino')">🎲 Casino</button>
+  </div>
+
+  <!-- 1. TİCARET SEKMESİ -->
+  <div id="tab-trade" class="tab-content active">
+    <div class="card-item">
+      <div class="card-info">
+        <div class="card-title">💧 Su Satışı</div>
+        <div class="card-sub">Maliyet: 1.00€ | Gelir: 1.50€</div>
+      </div>
+      <button class="btn" id="btn-water" onclick="doTrade(1, 1.5, 'Su sattın')">Sat</button>
+    </div>
+    <div class="card-item">
+      <div class="card-info">
+        <div class="card-title">☕ Sokak Kahvesi</div>
+        <div class="card-sub">Maliyet: 10.00€ | Gelir: 16.00€</div>
+      </div>
+      <button class="btn" id="btn-coffee" onclick="doTrade(10, 16, 'Kahve sattın')">Sat</button>
+    </div>
+    <div class="card-item">
+      <div class="card-info">
+        <div class="card-title">📱 İkinci El Telefon</div>
+        <div class="card-sub">Maliyet: 150.00€ | Gelir: 260.00€</div>
+      </div>
+      <button class="btn" id="btn-phone" onclick="doTrade(150, 260, 'Telefon alıp sattın')">Sat</button>
     </div>
   </div>
 
-  <!-- 3. Pasif Gelir -->
-  <div class="section">
-    <div class="section-title">🏢 Otomatik Gelir (Saniyede Kazan)</div>
-    <div class="btn-group">
-      <button class="btn-biz" id="btn-stand" onclick="buyBusiness('stand', 20, 0.5, 'Limon tezgahı')" disabled>Limon Tezgâhı (20€) [+0.5€/s]</button>
-      <button class="btn-biz" id="btn-shop" onclick="buyBusiness('shop', 100, 3, 'Büfe')" disabled>Büfe Aç (100€) [+3€/s]</button>
+  <!-- 2. KRİPTO SEKMESİ -->
+  <div id="tab-crypto" class="tab-content">
+    <div class="card-item">
+      <div class="card-info">
+        <div class="card-title">Bitcoin (BTC)</div>
+        <div class="card-sub">Fiyat: <span id="btcPrice">30000</span>€ | Eldeki: <span id="btcHeld">0</span></div>
+      </div>
+      <div>
+        <button class="btn" id="btn-buy-btc" onclick="buyCrypto('btc')">Al</button>
+        <button class="btn btn-danger" id="btn-sell-btc" onclick="sellCrypto('btc')">Sat</button>
+      </div>
+    </div>
+    <div class="card-item">
+      <div class="card-info">
+        <div class="card-title">Ethereum (ETH)</div>
+        <div class="card-sub">Fiyat: <span id="ethPrice">2000</span>€ | Eldeki: <span id="ethHeld">0</span></div>
+      </div>
+      <div>
+        <button class="btn" id="btn-buy-eth" onclick="buyCrypto('eth')">Al</button>
+        <button class="btn btn-danger" id="btn-sell-eth" onclick="sellCrypto('eth')">Sat</button>
+      </div>
     </div>
   </div>
 
-  <div class="log" id="logBox">
-    <div class="log-item">Cebinde 1 Euro ile başladın. Başarılar!</div>
+  <!-- 3. EMLAK SEKMESİ -->
+  <div id="tab-estate" class="tab-content">
+    <div class="card-item">
+      <div class="card-info">
+        <div class="card-title">Stüdyo Daire</div>
+        <div class="card-sub">Fiyat: 2,500€ | Gelir: +15€/sn</div>
+      </div>
+      <button class="btn" id="btn-apt" onclick="buyEstate('apt', 2500, 15, 'Stüdyo Daire')">Satın Al</button>
+    </div>
+    <div class="card-item">
+      <div class="card-info">
+        <div class="card-title">Lüks Otel</div>
+        <div class="card-sub">Fiyat: 50,000€ | Gelir: +350€/sn</div>
+      </div>
+      <button class="btn" id="btn-hotel" onclick="buyEstate('hotel', 50000, 350, 'Lüks Otel')">Satın Al</button>
+    </div>
+    <div class="card-item">
+      <div class="card-info">
+        <div class="card-title">Alışveriş Merkezi (AVM)</div>
+        <div class="card-sub">Fiyat: 500,000€ | Gelir: +4,500€/sn</div>
+      </div>
+      <button class="btn" id="btn-mall" onclick="buyEstate('mall', 500000, 4500, 'AVM')">Satın Al</button>
+    </div>
   </div>
+
+  <!-- 4. CASINO SEKMESİ -->
+  <div id="tab-casino" class="tab-content">
+    <div class="card-item">
+      <div class="card-info">
+        <div class="card-title">Yaz-Tura (%50 Şans)</div>
+        <div class="card-sub">Mevcut bakiyenin %50'sini riske et.</div>
+      </div>
+      <button class="btn btn-danger" onclick="gamble(0.5)">Oyna</button>
+    </div>
+    <div class="card-item">
+      <div class="card-info">
+        <div class="card-title">Hep ya da Hiç (%50 Şans)</div>
+        <div class="card-sub">Tüm bakiyeni riske et (2 katı veya 0).</div>
+      </div>
+      <button class="btn btn-danger" onclick="gamble(1.0)">All-In!</button>
+    </div>
+  </div>
+
+  <!-- Bildirim & Log -->
+  <div class="log-box" id="logBox">
+    <div class="log-entry yellow">> 1 Euro ile yolculuğun başladı. Milyoner olmaya çalış!</div>
+  </div>
+  
+  <button style="width:100%; margin-top:10px; background:none; border:none; color:#484f58; cursor:pointer; font-size:10px;" onclick="resetSave()">Sıfırla ve Bastan Başla</button>
 </div>
 
 <script>
-  let money = 1.00;
-  let incomePerSec = 0;
+  let game = {
+    money: 1.00,
+    cps: 0,
+    btc: 0,
+    eth: 0,
+    btcPrice: 30000,
+    ethPrice: 2000
+  };
 
   function updateUI() {
-    document.getElementById('money').innerText = money.toFixed(2);
+    document.getElementById('money').innerText = game.money.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('cps').innerText = game.cps.toFixed(2);
     
-    // Buton durumlarını paraya göre güncelle
-    document.getElementById('btn-water').disabled = money < 1;
-    document.getElementById('btn-coffee').disabled = money < 5;
-    document.getElementById('btn-stand').disabled = money < 20;
-    document.getElementById('btn-shop').disabled = money < 100;
+    // Milyonerlik Barı
+    let target = 1000000;
+    let progress = Math.min((game.money / target) * 100, 100);
+    document.getElementById('progressBar').style.width = progress + "%";
+    document.getElementById('progressText').innerText = `Milyonerliğe %${progress.toFixed(2)}`;
 
-    if (money <= 0) {
-      log("İflas ettin! Oyuna yeniden başlamak için sayfayı yenile.", "danger");
-    }
+    // Buton Kilitleri
+    document.getElementById('btn-water').disabled = game.money < 1;
+    document.getElementById('btn-coffee').disabled = game.money < 10;
+    document.getElementById('btn-phone').disabled = game.money < 150;
+
+    document.getElementById('btn-buy-btc').disabled = game.money < game.btcPrice;
+    document.getElementById('btn-sell-btc').disabled = game.btc <= 0;
+    document.getElementById('btn-buy-eth').disabled = game.money < game.ethPrice;
+    document.getElementById('btn-sell-eth').disabled = game.eth <= 0;
+
+    document.getElementById('btn-apt').disabled = game.money < 2500;
+    document.getElementById('btn-hotel').disabled = game.money < 50000;
+    document.getElementById('btn-mall').disabled = game.money < 500000;
+
+    // Kripto Yazıları
+    document.getElementById('btcPrice').innerText = Math.round(game.btcPrice);
+    document.getElementById('btcHeld').innerText = game.btc.toFixed(4);
+    document.getElementById('ethPrice').innerText = Math.round(game.ethPrice);
+    document.getElementById('ethHeld').innerText = game.eth.toFixed(4);
+
+    saveGame();
   }
 
-  function log(msg, type = "") {
+  function log(msg, color = "") {
     const box = document.getElementById('logBox');
     const div = document.createElement('div');
-    div.className = `log-item ${type}`;
+    div.className = `log-entry ${color}`;
     div.innerText = `> ${msg}`;
     box.appendChild(div);
     box.scrollTop = box.scrollHeight;
   }
 
-  function doTrade(item, cost, returnVal, name) {
-    if (money >= cost) {
-      money -= cost;
-      const profit = returnVal;
-      money += profit;
-      log(`${name}! Net Kar: +${(returnVal - cost).toFixed(2)}€`, "success");
+  function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    
+    event.target.classList.add('active');
+    document.getElementById(`tab-${tabName}`).classList.add('active');
+  }
+
+  function doTrade(cost, result, name) {
+    if (game.money >= cost) {
+      game.money += (result - cost);
+      log(`${name}! Kar: +${(result - cost).toFixed(2)}€`, "green");
+      updateUI();
+    }
+  }
+
+  function buyEstate(type, cost, cpsGain, name) {
+    if (game.money >= cost) {
+      game.money -= cost;
+      game.cps += cpsGain;
+      log(`${name} alındı! Pasif Gelir +${cpsGain}€/sn`, "green");
       updateUI();
     }
   }
 
   function gamble(ratio) {
-    if (money <= 0) return;
-    const bet = money * ratio;
-    const win = Math.random() < 0.5;
-
-    if (win) {
-      money += bet;
-      log(`RİSK TUTTU! +${bet.toFixed(2)}€ kazandın.`, "success");
+    if (game.money <= 0) return;
+    let bet = game.money * ratio;
+    if (Math.random() < 0.5) {
+      game.money += bet;
+      log(`RİSK KAZANDI! +${bet.toFixed(2)}€`, "green");
     } else {
-      money -= bet;
-      log(`RİSK BATTI! -${bet.toFixed(2)}€ kaybettin.`, "danger");
+      game.money -= bet;
+      log(`RİSK KAYBETTİ! -${bet.toFixed(2)}€`, "red");
     }
     updateUI();
   }
 
-  function buyBusiness(type, cost, cps, name) {
-    if (money >= cost) {
-      money -= cost;
-      incomePerSec += cps;
-      log(`${name} satın aldın! Saniyede +${cps}€ kazanıyorsun.`, "success");
+  // Kripto İşlemleri
+  function buyCrypto(type) {
+    let price = type === 'btc' ? game.btcPrice : game.ethPrice;
+    if (game.money >= price) {
+      game.money -= price;
+      game[type] += 1;
+      log(`1 adet ${type.toUpperCase()} alındı.`, "green");
       updateUI();
     }
   }
 
-  // Pasif Gelir Döngüsü
-  setInterval(() => {
-    if (incomePerSec > 0 && money > 0) {
-      money += incomePerSec;
+  function sellCrypto(type) {
+    if (game[type] >= 1) {
+      let price = type === 'btc' ? game.btcPrice : game.ethPrice;
+      game[type] -= 1;
+      game.money += price;
+      log(`1 adet ${type.toUpperCase()} satıldı.`, "green");
       updateUI();
     }
+  }
+
+  // Kripto Fiyat Dalgalanması & Pasif Gelir Döngüsü
+  setInterval(() => {
+    // Kripto Değişimi
+    let btcChange = (Math.random() - 0.49) * 0.05; // %5 dalgalanma
+    let ethChange = (Math.random() - 0.49) * 0.07;
+    game.btcPrice = Math.max(1000, game.btcPrice * (1 + btcChange));
+    game.ethPrice = Math.max(100, game.ethPrice * (1 + ethChange));
+
+    // Pasif Gelir
+    if (game.cps > 0) {
+      game.money += game.cps;
+    }
+
+    // Rastgele Şehir Etkinliği (%3 Şans)
+    if (Math.random() < 0.03) {
+      triggerRandomEvent();
+    }
+
+    updateUI();
   }, 1000);
 
+  function triggerRandomEvent() {
+    let events = [
+      { msg: "Sokakta 50€ buldun!", effect: () => game.money += 50, type: "green" },
+      { msg: "Vergi dairesi ceza kesti (-100€)!", effect: () => game.money = Math.max(0, game.money - 100), type: "red" },
+      { msg: "Kripto piyasası coştu!", effect: () => { game.btcPrice *= 1.2; game.ethPrice *= 1.2; }, type: "yellow" }
+    ];
+    let ev = events[Math.floor(Math.random() * events.length)];
+    ev.effect();
+    log(`[ETKİNLİK] ${ev.msg}`, ev.type);
+  }
+
+  // Kayıt Sistemi
+  function saveGame() {
+    localStorage.setItem('1euro_game_save', JSON.stringify(game));
+  }
+
+  function loadGame() {
+    let saved = localStorage.getItem('1euro_game_save');
+    if (saved) {
+      game = JSON.parse(saved);
+    }
+  }
+
+  function resetSave() {
+    if(confirm("Tüm ilerleme silinecek. Emin misin?")) {
+      localStorage.removeItem('1euro_game_save');
+      location.reload();
+    }
+  }
+
+  loadGame();
   updateUI();
 </script>
 
