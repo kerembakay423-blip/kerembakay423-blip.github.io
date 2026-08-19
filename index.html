@@ -49,13 +49,13 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* BÜYÜK SKOR BOARD & MAÇ ALANI */
+    /* SKOR BOARD ALANI */
     .scoreboard-card { background: linear-gradient(135deg, var(--green-dark), #022c22); color: #fff; border-radius: 14px; padding: 25px; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); position: relative; }
     .scoreboard-header { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--green-light); opacity: 0.9; margin-bottom: 15px; font-weight: 700; }
     
     .match-display { display: flex; justify-content: space-between; align-items: center; margin: 15px 0; }
     .team-box { flex: 1; font-size: 18px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-    .team-logo { width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+    .team-logo { width: 70px; height: 70px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4)); background: rgba(255,255,255,0.1); padding: 4px; border-radius: 50%; }
     
     .score-container { display: flex; flex-direction: column; align-items: center; gap: 4px; }
     .vs-box { font-size: 28px; font-weight: 900; background: var(--green-primary); color: #fff; padding: 10px 24px; border-radius: 12px; min-width: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
@@ -142,12 +142,12 @@
       </div>
     </div>
 
-    <!-- GELİŞMİŞ SKOR BOARD ALANI -->
+    <!-- SKOR BOARD ALANI -->
     <div class="scoreboard-card">
       <div class="scoreboard-header" id="matchRoundTitle">HAFTA 1 - PREMIER LEAGUE</div>
       <div class="match-display">
         <div class="team-box">
-          <img id="homeLogo" class="team-logo" src="" alt="">
+          <img id="homeLogo" class="team-logo" src="" alt="Home" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pennant.svg'">
           <span id="homeTeamName">KULÜBÜNÜZ</span>
         </div>
         <div class="score-container">
@@ -155,7 +155,7 @@
           <div class="match-time" id="matchTimeDisplay">Henüz Oynanmadı</div>
         </div>
         <div class="team-box">
-          <img id="awayLogo" class="team-logo" src="" alt="">
+          <img id="awayLogo" class="team-logo" src="" alt="Away" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pennant.svg'">
           <span id="awayTeamName">RAKİP TAKIM</span>
         </div>
       </div>
@@ -251,7 +251,7 @@
 
 </div>
 
-<!-- IN-GAME INTERACTIVE PENALTY MODAL -->
+<!-- INTERACTIVE PENALTY MODAL -->
 <div class="modal-overlay" id="penaltyModal">
   <div class="penalty-card">
     <h2 style="color: var(--green-dark);">🚨 PENALTI KAZANDINIZ!</h2>
@@ -270,7 +270,7 @@
 </div>
 
 <script>
-  // Premier League Takımları ve Logoları (Wikimedia Commons Resmî Vektörler)
+  // Tüm 20 Premier League Takımı Resmî Wikipedia CDN Doğrudan SVG Amblemleri
   let leagueTeams = [
     { name: "Arsenal", logo: "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg", budget: 85, rating: 86, squad: ["David Raya", "William Saliba", "Gabriel Magalhães", "Martin Ødegaard", "Declan Rice", "Bukayo Saka", "Viktor Gyökeres"] },
     { name: "Aston Villa", logo: "https://upload.wikimedia.org/wikipedia/en/9/9f/Aston_Villa_logo.svg", budget: 45, rating: 80, squad: ["Emiliano Martínez", "Ezri Konsa", "Pau Torres", "John McGinn", "Youri Tielemans", "Ollie Watkins"] },
@@ -278,11 +278,11 @@
     { name: "Brentford", logo: "https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg", budget: 20, rating: 75, squad: ["Mark Flekken", "Nathan Collins", "Mathias Jensen", "Mikkel Damsgaard", "Yoane Wissa"] },
     { name: "Brighton", logo: "https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg", budget: 35, rating: 78, squad: ["Bart Verbruggen", "Lewis Dunk", "Carlos Baleba", "Kaoru Mitoma", "João Pedro"] },
     { name: "Chelsea", logo: "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg", budget: 90, rating: 84, squad: ["Robert Sánchez", "Reece James", "Levi Colwill", "Moisés Caicedo", "Cole Palmer", "Nicolas Jackson"] },
-    { name: "Coventry City", logo: "https://upload.wikimedia.org/wikipedia/en/9/94/Coventry_City_FC_logo.svg", budget: 15, rating: 72, squad: ["Carl Rushworth", "Bobby Thomas", "Ben Sheaf", "Haji Wright", "Ellis Simms"] },
+    { name: "Coventry City", logo: "https://upload.wikimedia.org/wikipedia/en/2/2c/Coventry_City_FC_logo.svg", budget: 15, rating: 72, squad: ["Carl Rushworth", "Bobby Thomas", "Ben Sheaf", "Haji Wright", "Ellis Simms"] },
     { name: "Crystal Palace", logo: "https://upload.wikimedia.org/wikipedia/en/a/a2/Crystal_Palace_FC_logo.svg", budget: 25, rating: 76, squad: ["Dean Henderson", "Marc Guéhi", "Adam Wharton", "Ismaïla Sarr", "Jean-Philippe Mateta"] },
     { name: "Everton", logo: "https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg", budget: 20, rating: 75, squad: ["Jordan Pickford", "Jarrad Branthwaite", "Idrissa Gueye", "Iliman Ndiaye", "Beto"] },
     { name: "Fulham", logo: "https://upload.wikimedia.org/wikipedia/en/b/b4/Fulham_FC_%28shield%29.svg", budget: 30, rating: 77, squad: ["Bernd Leno", "Joachim Andersen", "Antonee Robinson", "Andreas Pereira", "Raúl Jiménez"] },
-    { name: "Hull City", logo: "https://upload.wikimedia.org/wikipedia/en/5/54/Hull_City_A.F.C._logo.svg", budget: 15, rating: 71, squad: ["Konstantinos Tzolakis", "Jack Butland", "Nobel Mendy", "Hidemasa Morita"] },
+    { name: "Hull City", logo: "https://upload.wikimedia.org/wikipedia/en/a/a2/Hull_City_A.F.C._logo.svg", budget: 15, rating: 71, squad: ["Konstantinos Tzolakis", "Jack Butland", "Nobel Mendy", "Hidemasa Morita"] },
     { name: "Ipswich Town", logo: "https://upload.wikimedia.org/wikipedia/en/4/43/Ipswich_Town.svg", budget: 15, rating: 72, squad: ["Christian Walton", "Dara O'Shea", "Sam Morsy", "Kalvin Phillips", "Omari Hutchinson"] },
     { name: "Liverpool", logo: "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg", budget: 95, rating: 87, squad: ["Alisson Becker", "Virgil van Dijk", "Alexis Mac Allister", "Florian Wirtz", "Mohamed Salah"] },
     { name: "Manchester City", logo: "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg", budget: 100, rating: 88, squad: ["Gianluigi Donnarumma", "Rúben Dias", "Joško Gvardiol", "Phil Foden", "Erling Haaland"] },
@@ -410,11 +410,9 @@
     });
   }
 
-  /* MAÇ BAŞLATMA VE PENALTI KONTROLÜ */
   function initiateMatch() {
     if (managerState.week > 38) return;
 
-    // %25 ihtimalle penaltı kazanılır
     if (Math.random() < 0.25 && !managerState.nextMatchFixed) {
       document.getElementById('penaltyModal').style.display = 'flex';
       document.getElementById('gkIcon').style.left = '45%';
@@ -466,13 +464,11 @@
           hGoals = Math.floor(Math.random() * (home.rating / 24));
           aGoals = Math.floor(Math.random() * (away.rating / 24));
 
-          // Penaltı golünü ekle
           if (m.home === managerState.myTeamIndex) hGoals += managerState.penaltyGoalAdded;
           else aGoals += managerState.penaltyGoalAdded;
           managerState.penaltyGoalAdded = 0;
         }
 
-        // Skor Paneli Güncellemesi (Uzatma Dakikası Dahil)
         let extraMin = Math.floor(Math.random() * 5) + 1;
         document.getElementById('scoreDisplay').innerText = `${hGoals} - ${aGoals}`;
         document.getElementById('matchTimeDisplay').innerText = `MAÇ SONU (90+${extraMin}')`;
