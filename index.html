@@ -3,279 +3,268 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>1 Euro Katlama - VIP Gece Kulübü İmparatorluğu</title>
+  <title>FM Pro: Futbol Menajerlik Simülatörü</title>
   <style>
-    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body {
-      background: #080a0f; color: #c9d1d9;
-      display: flex; justify-content: center; align-items: flex-start;
-      min-height: 100vh; margin: 0; padding: 15px;
+    :root {
+      --bg-main: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-hover: #334155;
+      --accent-gold: #f59e0b;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
     }
-    .container {
-      background: #12161f; border: 1px solid #30363d;
-      padding: 20px; border-radius: 16px; width: 100%; max-width: 550px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.9);
-    }
-    h1 { color: #f2cc60; margin: 0 0 12px 0; text-align: center; font-size: 22px; text-transform: uppercase; }
+
+    * { box-sizing: border-box; font-family: 'Inter', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; }
+    body { background-color: var(--bg-main); color: var(--text-main); display: flex; justify-content: center; padding: 20px; min-height: 100vh; }
     
-    .balance-box {
-      background: #1c212d; border: 2px solid #d29922;
-      border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 12px;
-    }
-    .balance-amount { font-size: 32px; font-weight: bold; color: #3fb950; }
-    .income-text { font-size: 12px; color: #58a6ff; margin-top: 2px; }
+    .app-container { width: 100%; max-width: 600px; background: var(--bg-card); border-radius: 16px; border: 1px solid var(--border-color); padding: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5); }
+    
+    /* Header */
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 15px; }
+    .club-title { font-size: 18px; font-weight: 800; color: var(--accent-gold); letter-spacing: 0.5px; }
+    .finance-badge { background: #064e3b; color: var(--accent-green); padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 14px; border: 1px solid #047857; }
 
-    /* Kurpiyer / Menajer Eda */
-    .croupier-box {
-      background: #1a1a2e; border: 1px solid #a371f7; border-radius: 10px;
-      padding: 10px; display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
-    }
-    .croupier-avatar { font-size: 36px; }
-    .croupier-speech {
-      background: #25253e; padding: 8px 12px; border-radius: 8px; font-size: 12px;
-      color: #f0f6fc; font-style: italic; flex: 1; min-height: 38px;
-      display: flex; align-items: center;
-    }
+    /* Stats Grid */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+    .stat-box { background: var(--bg-main); padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); text-align: center; }
+    .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 600; }
+    .stat-val { font-size: 16px; font-weight: 700; margin-top: 4px; color: var(--text-main); }
 
-    /* Sekmeler */
-    .tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
-    .tab-btn {
-      flex: 1; min-width: 22%; padding: 8px; background: #1c212d; border: 1px solid #30363d;
-      color: #8b949e; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 11px;
-    }
-    .tab-btn.active { background: #d29922; color: #0d1117; border-color: #f2cc60; }
+    /* Navigation Tabs */
+    .nav-tabs { display: flex; gap: 6px; margin-bottom: 15px; background: var(--bg-main); padding: 4px; border-radius: 10px; }
+    .nav-btn { flex: 1; padding: 8px; border: none; background: transparent; color: var(--text-muted); font-weight: 600; font-size: 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+    .nav-btn.active { background: var(--bg-card); color: var(--accent-gold); box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* Kartlar & Elemanlar */
-    .card-item { background: #1c212d; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
-    .card-title { font-weight: bold; color: #f0f6fc; font-size: 13px; margin-bottom: 4px; }
-    .card-sub { font-size: 11px; color: #8b949e; margin-bottom: 8px; }
+    /* Cards & Lists */
+    .item-card { background: var(--bg-main); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .item-info { display: flex; flex-direction: column; gap: 2px; }
+    .item-title { font-weight: 700; font-size: 14px; color: var(--text-main); }
+    .item-sub { font-size: 12px; color: var(--text-muted); }
 
-    button.btn {
-      background: #238636; color: #fff; border: none; padding: 8px 12px;
-      border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px;
-    }
-    button.btn:hover { background: #2ea043; }
-    button.btn-vip { background: #a371f7; color: #fff; }
-    button.btn-vip:hover { background: #8a4ef3; }
-    button.btn-casino { background: #d29922; color: #000; }
-    button.btn-casino:hover { background: #f2cc60; }
-    button:disabled { opacity: 0.3; cursor: not-allowed; }
+    /* Buttons */
+    .btn { background: var(--accent-green); color: #000; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; }
+    .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-action { background: var(--accent-gold); width: 100%; padding: 12px; border-radius: 8px; font-size: 14px; margin-top: 5px; }
 
-    .log-box {
-      background: #0d1117; border: 1px solid #30363d; border-radius: 6px;
-      padding: 8px; height: 80px; overflow-y: auto; font-size: 11px;
-      font-family: monospace; color: #8b949e; margin-top: 12px;
-    }
-    .log-entry { margin-bottom: 3px; }
-    .green { color: #3fb950; }
-    .purple { color: #a371f7; }
-    .red { color: #f85149; }
+    /* Log Screen */
+    .match-log { background: #020617; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 11px; color: var(--text-muted); margin-top: 15px; }
+    .log-line { margin-bottom: 4px; }
+    .log-green { color: var(--accent-green); }
+    .log-gold { color: var(--accent-gold); }
   </style>
 </head>
 <body>
 
-<div class="container">
-  <h1>🍸 VIP CLUB IMPERIUM</h1>
-
-  <div class="balance-box">
-    <div style="font-size: 11px; color: #8b949e;">TOPLAM SERVET</div>
-    <div class="balance-amount"><span id="money">1.00</span> €</div>
-    <div class="income-text">Kulüp Geliri: +<span id="cps">0.00</span> €/sn | Prestij: ⭐<span id="prestige">0</span></div>
+<div class="app-container">
+  <div class="header">
+    <div>
+      <div class="club-title">⚡ METROPOL SK</div>
+      <div style="font-size: 11px; color: var(--text-muted);">Süper Lig • Hafta <span id="weekNum">1</span></div>
+    </div>
+    <div class="finance-badge">€ <span id="budget">5.00</span>M</div>
   </div>
 
-  <!-- Menajer Eda -->
-  <div class="croupier-box">
-    <div class="croupier-avatar">👩‍💼</div>
-    <div class="croupier-speech" id="croupierSpeech">
-      "Hoş geldiniz patron! Kulübün kapılarını açmaya hazır mıyız?"
+  <div class="stats-grid">
+    <div class="stat-box">
+      <div class="stat-label">Kadro Gücü</div>
+      <div class="stat-val" id="teamRating">72</div>
     </div>
-  </div>
-
-  <!-- Sekme Menüsü -->
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('club')">🍸 Gece Kulübü</button>
-    <button class="tab-btn" onclick="switchTab('vip')">⭐ VIP Salon</button>
-    <button class="tab-btn" onclick="switchTab('staff')">🕴️ Personel</button>
-    <button class="tab-btn" onclick="switchTab('casino')">🎰 Casino</button>
-  </div>
-
-  <!-- 1. GECE KULÜBÜ MEKANLARI -->
-  <div id="tab-club" class="tab-content active">
-    <div class="card-item">
-      <div class="card-title">🧹 Sokak Kokteyl Standı</div>
-      <div class="card-sub">Sermaye: 1.00€ ➔ Anlık Kar: +0.50€</div>
-      <button class="btn" onclick="doTrade(1, 1.5, 'Sokakta kokteyl sattın')">Satış Yap (1€)</button>
+    <div class="stat-box">
+      <div class="stat-label">Lig Puanı</div>
+      <div class="stat-val" id="points">0</div>
     </div>
-    <div class="card-item">
-      <div class="card-title">🍹 Yeraltı Pub / Bar</div>
-      <div class="card-sub">Maliyet: 25.00€ | Pasif Gelir: +0.80€/sn | ⭐+1 Prestij</div>
-      <button class="btn btn-casino" id="btn-pub" onclick="buyVenue(25, 0.8, 1, 'Yeraltı Pub')">Mekanı Aç</button>
-    </div>
-    <div class="card-item">
-      <div class="card-title">💃 Neon VIP Gece Kulübü</div>
-      <div class="card-sub">Maliyet: 200.00€ | Pasif Gelir: +7.50€/sn | ⭐+5 Prestij</div>
-      <button class="btn btn-casino" id="btn-club" onclick="buyVenue(200, 7.5, 5, 'Neon Gece Kulübü')">Mekanı Aç</button>
-    </div>
-    <div class="card-item">
-      <div class="card-title">🎆 Mega Festival Alanı</div>
-      <div class="card-sub">Maliyet: 1,500.00€ | Pasif Gelir: +60.00€/sn | ⭐+25 Prestij</div>
-      <button class="btn btn-casino" id="btn-fest" onclick="buyVenue(1500, 60, 25, 'Mega Festival Alanı')">Mekanı Aç</button>
+    <div class="stat-box">
+      <div class="stat-label">Haftalık Gider</div>
+      <div class="stat-val" style="color: var(--accent-red);" id="wages">€0.4M</div>
     </div>
   </div>
 
-  <!-- 2. VIP SALON & MÜŞTERİLER -->
-  <div id="tab-vip" class="tab-content">
-    <div class="card-item">
-      <div class="card-title">🎧 DÜNYACA ÜNLÜ DJ PERFORMANSI</div>
-      <div class="card-sub">Maliyet: 50.00€ | Gereken Prestij: 5 ⭐ | Anlık Şov Geliri: 120.00€</div>
-      <button class="btn btn-vip" id="btn-dj" onclick="hostVIP(50, 5, 120, 'DJ Şovu')">Etkinlik Düzenle</button>
-    </div>
-    <div class="card-item">
-      <div class="card-title">🍾 SOSYETE VIP ŞAMANYA MASASI</div>
-      <div class="card-sub">Maliyet: 300.00€ | Gereken Prestij: 15 ⭐ | Anlık Şov Geliri: 800.00€</div>
-      <button class="btn btn-vip" id="btn-champagne" onclick="hostVIP(300, 15, 800, 'VIP Şampanya Masası')">Ağırla</button>
-    </div>
+  <div class="nav-tabs">
+    <button class="nav-btn active" onclick="switchTab('squad')">⚽ Kadro</button>
+    <button class="nav-btn" onclick="switchTab('transfer')">🔄 Transfer</button>
+    <button class="nav-btn" onclick="switchTab('stadium')">🏟️ Tesisler</button>
   </div>
 
-  <!-- 3. PERSONEL KİRALAMA -->
-  <div id="tab-staff" class="tab-content">
-    <div class="card-item">
-      <div class="card-title">🕴️ Badigart / Caddy Güvenlik</div>
-      <div class="card-sub">Maliyet: 40.00€ | Kulüp Gelirini +1.50€/sn Artırır</div>
-      <button class="btn" id="btn-guard" onclick="hireStaff(40, 1.5, 'Badigart')">İşe Al</button>
-    </div>
-    <div class="card-item">
-      <div class="card-title">🍸 Usta Miksolojist Barmen</div>
-      <div class="card-sub">Maliyet: 120.00€ | Kulüp Gelirini +5.00€/sn Artırır</div>
-      <button class="btn" id="btn-barmen" onclick="hireStaff(120, 5.0, 'Usta Barmen')">İşe Al</button>
-    </div>
+  <!-- KADRO SEKMESİ -->
+  <div id="tab-squad" class="tab-content active">
+    <div id="squadList"></div>
+    <button class="btn btn-action" onclick="playMatch()">NEXT MATCH (Haftanın Maçını Oyna)</button>
   </div>
 
-  <!-- 4. CASINO (RUaLET & CASINO) -->
-  <div id="tab-casino" class="tab-content">
-    <div class="card-item">
-      <div class="card-title">🔴 VIP Kırmızı / Siyah Rulet ⬛</div>
-      <div style="display:flex; gap:5px; margin-top:5px;">
-        <button class="btn btn-danger" style="flex:1;" onclick="playRoulette('Kırmızı')">🔴 Kırmızı (2x)</button>
-        <button class="btn" style="background:#000; flex:1;" onclick="playRoulette('Siyah')">⬛ Siyah (2x)</button>
+  <!-- TRANSFER SEKMESİ -->
+  <div id="tab-transfer" class="tab-content">
+    <div id="transferList"></div>
+  </div>
+
+  <!-- TESİSLER SEKMESİ -->
+  <div id="tab-stadium" class="tab-content">
+    <div class="item-card">
+      <div class="item-info">
+        <div class="item-title">🏟️ Stadyum Kapasitesi</div>
+        <div class="item-sub">Kapasite: <span id="stadiumCap">15,000</span> | Maç Başı Gelir: +€0.3M</div>
       </div>
+      <button class="btn" onclick="upgradeStadium()">Genişlet (€2.0M)</button>
+    </div>
+    <div class="item-card">
+      <div class="item-info">
+        <div class="item-title">🏋️ Antrenman Tesisleri</div>
+        <div class="item-sub">Oyuncu gelişim hızını %15 artırır.</div>
+      </div>
+      <button class="btn" onclick="upgradeFacilities()">Yükselt (€1.5M)</button>
     </div>
   </div>
 
-  <div class="log-box" id="logBox">
-    <div class="log-entry green">> 1 Euro ile Gece Hayatı Sektörüne Giriş Yaptın!</div>
+  <div class="match-log" id="logBox">
+    <div class="log-line log-gold">> Yeni Sezon Başladı. Takımın başında başarılar menajer!</div>
   </div>
 </div>
 
 <script>
-  let game = {
-    money: 1.00,
-    cps: 0,
-    prestige: 0
+  let club = {
+    budget: 5.0,
+    week: 1,
+    points: 0,
+    stadiumCap: 15000,
+    facilityLevel: 1,
+    squad: [
+      { id: 1, name: "Ahmet Yılmaz", pos: "GK", rating: 70, wage: 0.05 },
+      { id: 2, name: "Mehmet Demir", pos: "DEF", rating: 73, wage: 0.08 },
+      { id: 3, name: "Carlos Silva", pos: "MID", rating: 75, wage: 0.12 },
+      { id: 4, name: "Burak Kaya", pos: "FWD", rating: 71, wage: 0.07 }
+    ]
   };
 
-  function edaSay(text) { document.getElementById('croupierSpeech').innerText = `"${text}"`; }
-  
-  function log(msg, color = "") {
+  const marketPlayers = [
+    { name: "Marco Reus", pos: "MID", rating: 81, price: 3.5, wage: 0.3 },
+    { name: "Lucas Hernandez", pos: "DEF", rating: 79, price: 2.8, wage: 0.2 },
+    { name: "Victor Osimhen", pos: "FWD", rating: 85, price: 6.0, wage: 0.5 },
+    { name: "Sami Khedira", pos: "MID", rating: 76, price: 1.2, wage: 0.1 }
+  ];
+
+  function getTeamRating() {
+    let sum = club.squad.reduce((acc, p) => acc + p.rating, 0);
+    return Math.round(sum / club.squad.length);
+  }
+
+  function getTotalWages() {
+    return club.squad.reduce((acc, p) => acc + p.wage, 0).toFixed(2);
+  }
+
+  function log(msg, colorClass = "") {
     const box = document.getElementById('logBox');
     const div = document.createElement('div');
-    div.className = `log-entry ${color}`;
-    div.innerText = `> ${msg}`;
+    div.className = `log-line ${colorClass}`;
+    div.innerText = `> Hafta ${club.week}: ${msg}`;
     box.appendChild(div);
     box.scrollTop = box.scrollHeight;
   }
 
   function updateUI() {
-    document.getElementById('money').innerText = game.money.toFixed(2);
-    document.getElementById('cps').innerText = game.cps.toFixed(2);
-    document.getElementById('prestige').innerText = game.prestige;
+    document.getElementById('budget').innerText = club.budget.toFixed(2);
+    document.getElementById('weekNum').innerText = club.week;
+    document.getElementById('points').innerText = club.points;
+    document.getElementById('teamRating').innerText = getTeamRating();
+    document.getElementById('wages').innerText = `€${getTotalWages()}M`;
+    document.getElementById('stadiumCap').innerText = club.stadiumCap.toLocaleString();
 
-    document.getElementById('btn-pub').disabled = game.money < 25;
-    document.getElementById('btn-club').disabled = game.money < 200;
-    document.getElementById('btn-fest').disabled = game.money < 1500;
+    // Render Squad
+    const squadBox = document.getElementById('squadList');
+    squadBox.innerHTML = '';
+    club.squad.forEach(p => {
+      squadBox.innerHTML += `
+        <div class="item-card">
+          <div class="item-info">
+            <div class="item-title">${p.name} (${p.pos})</div>
+            <div class="item-sub">GÜÇ: ${p.rating} | Maaş: €${p.wage}M/hafta</div>
+          </div>
+        </div>`;
+    });
 
-    document.getElementById('btn-dj').disabled = game.money < 50 || game.prestige < 5;
-    document.getElementById('btn-champagne').disabled = game.money < 300 || game.prestige < 15;
-
-    document.getElementById('btn-guard').disabled = game.money < 40;
-    document.getElementById('btn-barmen').disabled = game.money < 120;
+    // Render Market
+    const marketBox = document.getElementById('transferList');
+    marketBox.innerHTML = '';
+    marketPlayers.forEach((p, idx) => {
+      marketBox.innerHTML += `
+        <div class="item-card">
+          <div class="item-info">
+            <div class="item-title">${p.name} (${p.pos}) - ⭐${p.rating}</div>
+            <div class="item-sub">Bonservis: €${p.price}M | Maaş: €${p.wage}M</div>
+          </div>
+          <button class="btn" onclick="buyPlayer(${idx})">Al</button>
+        </div>`;
+    });
   }
 
   function switchTab(tabName) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     event.target.classList.add('active');
     document.getElementById(`tab-${tabName}`).classList.add('active');
   }
 
-  function doTrade(cost, result, name) {
-    if (game.money >= cost) {
-      game.money += (result - cost);
-      log(`${name}! Kar: +${(result - cost).toFixed(2)}€`, "green");
+  function buyPlayer(idx) {
+    let p = marketPlayers[idx];
+    if (club.budget >= p.price) {
+      club.budget -= p.price;
+      club.squad.push({ id: Date.now(), name: p.name, pos: p.pos, rating: p.rating, wage: p.wage });
+      marketPlayers.splice(idx, 1);
+      log(`${p.name} transfer edildi! (-€${p.price}M)`, "log-green");
+      updateUI();
+    } else {
+      log("Bütçe yetersiz!", "log-gold");
+    }
+  }
+
+  function upgradeStadium() {
+    if (club.budget >= 2.0) {
+      club.budget -= 2.0;
+      club.stadiumCap += 5000;
+      log("Stadyum genişletildi! +5,000 Kapasite", "log-green");
       updateUI();
     }
   }
 
-  function buyVenue(cost, cpsGain, prestigeGain, name) {
-    if (game.money >= cost) {
-      game.money -= cost;
-      game.cps += cpsGain;
-      game.prestige += prestigeGain;
-      edaSay(`Tebrikler patron! ${name} açıldı! Müşteriler akın ediyor.`);
-      log(`${name} Açıldı! Gelir: +${cpsGain}€/sn, Prestij: +${prestigeGain}`, "purple");
+  function upgradeFacilities() {
+    if (club.budget >= 1.5) {
+      club.budget -= 1.5;
+      club.facilityLevel++;
+      log("Antrenman tesisleri seviye atladı!", "log-green");
       updateUI();
     }
   }
 
-  function hostVIP(cost, reqPrestige, reward, name) {
-    if (game.money >= cost && game.prestige >= reqPrestige) {
-      game.money -= cost;
-      updateUI();
-      edaSay(`${name} başladı! VIP konuklar eğleniyor...`);
-      setTimeout(() => {
-        game.money += reward;
-        edaSay(`Muazzam geceydi! ${reward}€ gelir elde ettik!`);
-        log(`VIP Etkinlik (${name}): Net Kar +${(reward - cost).toFixed(2)}€`, "purple");
-        updateUI();
-      }, 1000);
-    }
-  }
+  function playMatch() {
+    let teamPower = getTeamRating();
+    let opponentPower = Math.floor(Math.random() * 20) + 65; // 65-85 arası rakip
+    
+    // Maç Gelir/Gider
+    let matchIncome = (club.stadiumCap / 100000); // Bilet geliri
+    let totalWages = parseFloat(getTotalWages());
+    club.budget += (matchIncome - totalWages);
 
-  function hireStaff(cost, cpsGain, name) {
-    if (game.money >= cost) {
-      game.money -= cost;
-      game.cps += cpsGain;
-      log(`${name} işe alındı! +${cpsGain}€/sn`, "green");
-      updateUI();
-    }
-  }
+    // Skor Simülasyonu
+    let myGoals = Math.floor(Math.random() * (teamPower / 25));
+    let oppGoals = Math.floor(Math.random() * (opponentPower / 25));
 
-  function playRoulette(color) {
-    if (game.money < 5) return edaSay("VIP Rulet masası en az 5€ gerektirir!");
-    game.money -= 5;
-    edaSay("Çark dönüyor...");
-    setTimeout(() => {
-      if (Math.random() < 0.45) {
-        game.money += 10;
-        edaSay("Rulet kazandı! İçecekler benden!");
-        log(`Rulet KAZANDIN (+5.00€)`, "green");
-      } else {
-        edaSay("Kasa kazandı...");
-        log(`Rulet Kaybettin (-5.00€)`, "red");
-      }
-      updateUI();
-    }, 800);
-  }
-
-  setInterval(() => {
-    if (game.cps > 0) {
-      game.money += game.cps;
-      updateUI();
+    if (myGoals > oppGoals) {
+      club.points += 3;
+      log(`Galibiyet! Metropol SK ${myGoals} - ${oppGoals} Rakip (+3 Puan)`, "log-green");
+    } else if (myGoals === oppGoals) {
+      club.points += 1;
+      log(`Beraberlik. Metropol SK ${myGoals} - ${oppGoals} Rakip (+1 Puan)`, "log-gold");
+    } else {
+      log(`Mağlubiyet. Metropol SK ${myGoals} - ${oppGoals} Rakip`, "");
     }
-  }, 1000);
+
+    club.week++;
+    updateUI();
+  }
 
   updateUI();
 </script>
