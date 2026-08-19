@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mega Casino Simulator & Yasadışı Bahis</title>
+  <title>1 Euro Katlama - VIP Gece Kulübü İmparatorluğu</title>
   <style>
     * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
     body {
@@ -16,16 +16,16 @@
       padding: 20px; border-radius: 16px; width: 100%; max-width: 550px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.9);
     }
-    h1 { color: #f2cc60; margin: 0 0 12px 0; text-align: center; font-size: 22px; text-transform: uppercase; letter-spacing: 1px; }
+    h1 { color: #f2cc60; margin: 0 0 12px 0; text-align: center; font-size: 22px; text-transform: uppercase; }
     
     .balance-box {
       background: #1c212d; border: 2px solid #d29922;
       border-radius: 12px; padding: 12px; text-align: center; margin-bottom: 12px;
     }
     .balance-amount { font-size: 32px; font-weight: bold; color: #3fb950; }
-    .debt-text { font-size: 12px; color: #f85149; margin-top: 2px; }
+    .income-text { font-size: 12px; color: #58a6ff; margin-top: 2px; }
 
-    /* Kurpiyer Eda */
+    /* Kurpiyer / Menajer Eda */
     .croupier-box {
       background: #1a1a2e; border: 1px solid #a371f7; border-radius: 10px;
       padding: 10px; display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
@@ -50,22 +50,20 @@
 
     /* Kartlar & Elemanlar */
     .card-item { background: #1c212d; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
-    .card-title { font-weight: bold; color: #f0f6fc; font-size: 13px; margin-bottom: 6px; }
+    .card-title { font-weight: bold; color: #f0f6fc; font-size: 13px; margin-bottom: 4px; }
+    .card-sub { font-size: 11px; color: #8b949e; margin-bottom: 8px; }
 
     button.btn {
       background: #238636; color: #fff; border: none; padding: 8px 12px;
       border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 12px;
     }
+    button.btn:hover { background: #2ea043; }
+    button.btn-vip { background: #a371f7; color: #fff; }
+    button.btn-vip:hover { background: #8a4ef3; }
     button.btn-casino { background: #d29922; color: #000; }
     button.btn-casino:hover { background: #f2cc60; }
-    button.btn-danger { background: #da3633; color: #fff; }
     button:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* Mayın Tarlası Arayüzü */
-    .mines-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0; }
-    .mine-btn { background: #2d333b; border: 1px solid #444c56; border-radius: 6px; height: 45px; font-size: 18px; cursor: pointer; }
-
-    /* Log Ekrani */
     .log-box {
       background: #0d1117; border: 1px solid #30363d; border-radius: 6px;
       padding: 8px; height: 80px; overflow-y: auto; font-size: 11px;
@@ -73,128 +71,111 @@
     }
     .log-entry { margin-bottom: 3px; }
     .green { color: #3fb950; }
+    .purple { color: #a371f7; }
     .red { color: #f85149; }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>🎰 MEGA CASINO & ŞANS</h1>
+  <h1>🍸 VIP CLUB IMPERIUM</h1>
 
   <div class="balance-box">
-    <div style="font-size: 11px; color: #8b949e;">CÜZDAN BAKIYESI</div>
+    <div style="font-size: 11px; color: #8b949e;">TOPLAM SERVET</div>
     <div class="balance-amount"><span id="money">1.00</span> €</div>
-    <div class="debt-text" id="debtBox" style="display:none;">Tefeci Borcu: <span id="debtVal">0</span> €</div>
+    <div class="income-text">Kulüp Geliri: +<span id="cps">0.00</span> €/sn | Prestij: ⭐<span id="prestige">0</span></div>
   </div>
 
-  <!-- Kurpiyer Eda -->
+  <!-- Menajer Eda -->
   <div class="croupier-box">
     <div class="croupier-avatar">👩‍💼</div>
     <div class="croupier-speech" id="croupierSpeech">
-      "Hoş geldiniz... Bütün masalar açık, istediğiniz yerde şansınızı deneyin!"
+      "Hoş geldiniz patron! Kulübün kapılarını açmaya hazır mıyız?"
     </div>
   </div>
 
   <!-- Sekme Menüsü -->
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('bj')">🃏 21 (BJ)</button>
-    <button class="tab-btn" onclick="switchTab('mines')">💣 Mayın</button>
-    <button class="tab-btn" onclick="switchTab('wheel')">🎡 Çark</button>
-    <button class="tab-btn" onclick="switchTab('dice')">🎲 Zar/Horoz</button>
-    <button class="tab-btn" onclick="switchTab('sports')">⚽ Spor</button>
-    <button class="tab-btn" onclick="switchTab('shark')">🏦 Tefeci</button>
+    <button class="tab-btn active" onclick="switchTab('club')">🍸 Gece Kulübü</button>
+    <button class="tab-btn" onclick="switchTab('vip')">⭐ VIP Salon</button>
+    <button class="tab-btn" onclick="switchTab('staff')">🕴️ Personel</button>
+    <button class="tab-btn" onclick="switchTab('casino')">🎰 Casino</button>
   </div>
 
-  <!-- 1. BLACKJACK SEKMESİ -->
-  <div id="tab-bj" class="tab-content active">
-    <div class="card-item" style="text-align:center; background:#0e3a1e;">
-      <div style="font-size: 12px; color: #aaa;">Kasa: <span id="dealerScore">0</span> | Eldeki: <span id="dealerCards">❓</span></div>
-      <hr style="border-color: #1f6f3a; margin: 8px 0;">
-      <div style="font-size: 12px; color: #aaa;">Siz: <span id="playerScore">0</span> | Eldeki: <span id="playerCards">❓</span></div>
-      
-      <div style="margin-top: 10px;" id="bjBetArea">
-        <input type="number" id="bjBet" value="1" min="1" style="width:70px; padding:4px; background:#161b22; color:#fff; border:1px solid #30363d;">
-        <button class="btn btn-casino" onclick="startBlackjack()">Dağıt</button>
-      </div>
-
-      <div style="margin-top: 10px; display:none;" id="bjControls">
-        <button class="btn" onclick="bjHit()">🎴 Çek (Hit)</button>
-        <button class="btn btn-danger" onclick="bjStand()">✋ Pas (Stand)</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. MAYIN TARLASI SEKMESİ -->
-  <div id="tab-mines" class="tab-content">
+  <!-- 1. GECE KULÜBÜ MEKANLARI -->
+  <div id="tab-club" class="tab-content active">
     <div class="card-item">
-      <div class="card-title">💣 Mayın Tarlası (1 Mayın Var)</div>
-      <p style="font-size:11px; color:#8b949e; margin:0 0 8px 0;">Bastıkça çarpan artar. Mayına basarsan sıfırlanırsın!</p>
-      <div style="display:flex; gap:8px;">
-        <input type="number" id="mineBet" value="1" min="1" style="width:70px; padding:4px; background:#161b22; color:#fff; border:1px solid #30363d;">
-        <button class="btn btn-casino" onclick="startMines()">Oyunu Başlat</button>
-        <button class="btn" id="btn-cashout" onclick="cashoutMines()" disabled>Parayı Çek (1.00x)</button>
-      </div>
-      <div class="mines-grid" id="minesBoard">
-        <!-- 9 Kare Kodu JS ile doldurulacak -->
-      </div>
-    </div>
-  </div>
-
-  <!-- 3. ÇARKIFFELEK SEKMESİ -->
-  <div id="tab-wheel" class="tab-content">
-    <div class="card-item" style="text-align:center;">
-      <div class="card-title">🎡 Şans Çarkı (Bahis: 2.00€)</div>
-      <div id="wheelDisplay" style="font-size:36px; margin:10px 0;">🎯</div>
-      <button class="btn btn-casino" onclick="spinWheel()" style="width:100%;">Çarkı Çevir (2€)</button>
-    </div>
-  </div>
-
-  <!-- 4. ZAR & SOKAK DÖVÜŞÜ SEKMESİ -->
-  <div id="tab-dice" class="tab-content">
-    <div class="card-item">
-      <div class="card-title">🎲 Çift Zar Atma (Bahis: 1.00€)</div>
-      <p style="font-size:11px; color:#8b949e;">Zarların toplamı 7 veya 11 gelirse 3x kazanırsın!</p>
-      <button class="btn btn-casino" onclick="rollDice()">Zar At (1€)</button>
+      <div class="card-title">🧹 Sokak Kokteyl Standı</div>
+      <div class="card-sub">Sermaye: 1.00€ ➔ Anlık Kar: +0.50€</div>
+      <button class="btn" onclick="doTrade(1, 1.5, 'Sokakta kokteyl sattın')">Satış Yap (1€)</button>
     </div>
     <div class="card-item">
-      <div class="card-title">🐓 Yasadışı Horoz Dövüşü (Bahis: 5.00€)</div>
+      <div class="card-title">🍹 Yeraltı Pub / Bar</div>
+      <div class="card-sub">Maliyet: 25.00€ | Pasif Gelir: +0.80€/sn | ⭐+1 Prestij</div>
+      <button class="btn btn-casino" id="btn-pub" onclick="buyVenue(25, 0.8, 1, 'Yeraltı Pub')">Mekanı Aç</button>
+    </div>
+    <div class="card-item">
+      <div class="card-title">💃 Neon VIP Gece Kulübü</div>
+      <div class="card-sub">Maliyet: 200.00€ | Pasif Gelir: +7.50€/sn | ⭐+5 Prestij</div>
+      <button class="btn btn-casino" id="btn-club" onclick="buyVenue(200, 7.5, 5, 'Neon Gece Kulübü')">Mekanı Aç</button>
+    </div>
+    <div class="card-item">
+      <div class="card-title">🎆 Mega Festival Alanı</div>
+      <div class="card-sub">Maliyet: 1,500.00€ | Pasif Gelir: +60.00€/sn | ⭐+25 Prestij</div>
+      <button class="btn btn-casino" id="btn-fest" onclick="buyVenue(1500, 60, 25, 'Mega Festival Alanı')">Mekanı Aç</button>
+    </div>
+  </div>
+
+  <!-- 2. VIP SALON & MÜŞTERİLER -->
+  <div id="tab-vip" class="tab-content">
+    <div class="card-item">
+      <div class="card-title">🎧 DÜNYACA ÜNLÜ DJ PERFORMANSI</div>
+      <div class="card-sub">Maliyet: 50.00€ | Gereken Prestij: 5 ⭐ | Anlık Şov Geliri: 120.00€</div>
+      <button class="btn btn-vip" id="btn-dj" onclick="hostVIP(50, 5, 120, 'DJ Şovu')">Etkinlik Düzenle</button>
+    </div>
+    <div class="card-item">
+      <div class="card-title">🍾 SOSYETE VIP ŞAMANYA MASASI</div>
+      <div class="card-sub">Maliyet: 300.00€ | Gereken Prestij: 15 ⭐ | Anlık Şov Geliri: 800.00€</div>
+      <button class="btn btn-vip" id="btn-champagne" onclick="hostVIP(300, 15, 800, 'VIP Şampanya Masası')">Ağırla</button>
+    </div>
+  </div>
+
+  <!-- 3. PERSONEL KİRALAMA -->
+  <div id="tab-staff" class="tab-content">
+    <div class="card-item">
+      <div class="card-title">🕴️ Badigart / Caddy Güvenlik</div>
+      <div class="card-sub">Maliyet: 40.00€ | Kulüp Gelirini +1.50€/sn Artırır</div>
+      <button class="btn" id="btn-guard" onclick="hireStaff(40, 1.5, 'Badigart')">İşe Al</button>
+    </div>
+    <div class="card-item">
+      <div class="card-title">🍸 Usta Miksolojist Barmen</div>
+      <div class="card-sub">Maliyet: 120.00€ | Kulüp Gelirini +5.00€/sn Artırır</div>
+      <button class="btn" id="btn-barmen" onclick="hireStaff(120, 5.0, 'Usta Barmen')">İşe Al</button>
+    </div>
+  </div>
+
+  <!-- 4. CASINO (RUaLET & CASINO) -->
+  <div id="tab-casino" class="tab-content">
+    <div class="card-item">
+      <div class="card-title">🔴 VIP Kırmızı / Siyah Rulet ⬛</div>
       <div style="display:flex; gap:5px; margin-top:5px;">
-        <button class="btn btn-danger" style="flex:1;" onclick="playRooster('Kırmızı Horoz', 2.20)">🔴 Kırmızı Horoz (2.20x)</button>
-        <button class="btn" style="background:#000; flex:1;" onclick="playRooster('Siyah Horoz', 2.20)">⬛ Siyah Horoz (2.20x)</button>
+        <button class="btn btn-danger" style="flex:1;" onclick="playRoulette('Kırmızı')">🔴 Kırmızı (2x)</button>
+        <button class="btn" style="background:#000; flex:1;" onclick="playRoulette('Siyah')">⬛ Siyah (2x)</button>
       </div>
-    </div>
-  </div>
-
-  <!-- 5. SPOR BAHİSLERİ SEKMESİ -->
-  <div id="tab-sports" class="tab-content">
-    <div class="card-item">
-      <div class="card-title">⚽ Real Madrid vs Barcelona (Bahis: 5€)</div>
-      <div style="display:flex; gap:5px;">
-        <button class="btn" onclick="placeSportsBet('Real Madrid', 1.80, 5)">MS 1 (1.80)</button>
-        <button class="btn" onclick="placeSportsBet('Barcelona', 2.10, 5)">MS 2 (2.10)</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 6. TEFECİ SEKMESİ -->
-  <div id="tab-shark" class="tab-content">
-    <div class="card-item">
-      <div class="card-title">🏦 Tefeci Rıza</div>
-      <p style="font-size:11px; color:#8b949e;">Paran bittiğinde borç al. Her saniye %1 faiz biner!</p>
-      <button class="btn btn-danger" onclick="takeLoan(10)">10€ Borç Al</button>
-      <button class="btn btn-danger" onclick="takeLoan(50)">50€ Borç Al</button>
-      <button class="btn" onclick="payLoan()" style="margin-top:5px;">Borcu Öde</button>
     </div>
   </div>
 
   <div class="log-box" id="logBox">
-    <div class="log-entry">> Kumarhaneye girdin. Şansın bol olsun!</div>
+    <div class="log-entry green">> 1 Euro ile Gece Hayatı Sektörüne Giriş Yaptın!</div>
   </div>
 </div>
 
 <script>
-  let money = 1.00;
-  let debt = 0;
+  let game = {
+    money: 1.00,
+    cps: 0,
+    prestige: 0
+  };
 
   function edaSay(text) { document.getElementById('croupierSpeech').innerText = `"${text}"`; }
   
@@ -208,13 +189,19 @@
   }
 
   function updateUI() {
-    document.getElementById('money').innerText = money.toFixed(2);
-    if (debt > 0) {
-      document.getElementById('debtBox').style.display = 'block';
-      document.getElementById('debtVal').innerText = debt.toFixed(2);
-    } else {
-      document.getElementById('debtBox').style.display = 'none';
-    }
+    document.getElementById('money').innerText = game.money.toFixed(2);
+    document.getElementById('cps').innerText = game.cps.toFixed(2);
+    document.getElementById('prestige').innerText = game.prestige;
+
+    document.getElementById('btn-pub').disabled = game.money < 25;
+    document.getElementById('btn-club').disabled = game.money < 200;
+    document.getElementById('btn-fest').disabled = game.money < 1500;
+
+    document.getElementById('btn-dj').disabled = game.money < 50 || game.prestige < 5;
+    document.getElementById('btn-champagne').disabled = game.money < 300 || game.prestige < 15;
+
+    document.getElementById('btn-guard').disabled = game.money < 40;
+    document.getElementById('btn-barmen').disabled = game.money < 120;
   }
 
   function switchTab(tabName) {
@@ -224,174 +211,72 @@
     document.getElementById(`tab-${tabName}`).classList.add('active');
   }
 
-  /* --- 1. BLACKJACK --- */
-  let pCards = [], dCards = [], bjBetAmount = 0;
-  function drawCard() { return Math.floor(Math.random() * 10) + 2; }
-  function getSum(arr) { return arr.reduce((a, b) => a + b, 0); }
-
-  function startBlackjack() {
-    let bet = parseFloat(document.getElementById('bjBet').value);
-    if (isNaN(bet) || bet <= 0 || money < bet) return edaSay("Yetersiz bakiye!");
-    money -= bet; bjBetAmount = bet; updateUI();
-    pCards = [drawCard(), drawCard()]; dCards = [drawCard()];
-    document.getElementById('bjControls').style.display = "block";
-    document.getElementById('bjBetArea').style.display = "none";
-    edaSay("Kartlar dağıtıldı!");
-    renderBJ();
-  }
-
-  function renderBJ() {
-    document.getElementById('playerCards').innerText = pCards.join("-");
-    document.getElementById('playerScore').innerText = getSum(pCards);
-    document.getElementById('dealerCards').innerText = dCards.join("-") + "-❓";
-    document.getElementById('dealerScore').innerText = getSum(dCards);
-  }
-
-  function bjHit() {
-    pCards.push(drawCard()); renderBJ();
-    if (getSum(pCards) > 21) {
-      edaSay("21'i geçtiniz! Kaybettiniz."); log(`BJ: Kaybettiniz (-${bjBetAmount}€)`, "red");
-      endBJ();
+  function doTrade(cost, result, name) {
+    if (game.money >= cost) {
+      game.money += (result - cost);
+      log(`${name}! Kar: +${(result - cost).toFixed(2)}€`, "green");
+      updateUI();
     }
   }
 
-  function bjStand() {
-    while (getSum(dCards) < 17) dCards.push(drawCard());
-    let p = getSum(pCards), d = getSum(dCards);
-    document.getElementById('dealerCards').innerText = dCards.join("-");
-    document.getElementById('dealerScore').innerText = d;
-
-    if (d > 21 || p > d) { money += bjBetAmount * 2; edaSay("Kazandınız!"); log(`BJ: Kazandınız! (+${bjBetAmount}€)`, "green"); }
-    else if (p === d) { money += bjBetAmount; edaSay("Berabere."); }
-    else { edaSay("Kasa kazandı!"); log(`BJ: Kaybettiniz (-${bjBetAmount}€)`, "red"); }
-    updateUI(); endBJ();
-  }
-  function endBJ() { document.getElementById('bjControls').style.display = "none"; document.getElementById('bjBetArea').style.display = "block"; }
-
-  /* --- 2. MAYIN TARLASI --- */
-  let mineIndex = -1, currentMultiplier = 1.0, activeMinesGame = false, mineBetVal = 0;
-  function initMinesBoard() {
-    let board = document.getElementById('minesBoard');
-    board.innerHTML = '';
-    for(let i=0; i<9; i++) {
-      let b = document.createElement('button');
-      b.className = 'mine-btn'; b.innerText = '❓';
-      b.onclick = () => stepMine(i, b);
-      board.appendChild(b);
+  function buyVenue(cost, cpsGain, prestigeGain, name) {
+    if (game.money >= cost) {
+      game.money -= cost;
+      game.cps += cpsGain;
+      game.prestige += prestigeGain;
+      edaSay(`Tebrikler patron! ${name} açıldı! Müşteriler akın ediyor.`);
+      log(`${name} Açıldı! Gelir: +${cpsGain}€/sn, Prestij: +${prestigeGain}`, "purple");
+      updateUI();
     }
   }
 
-  function startMines() {
-    let bet = parseFloat(document.getElementById('mineBet').value);
-    if (isNaN(bet) || bet <= 0 || money < bet) return edaSay("Yetersiz bakiye!");
-    money -= bet; mineBetVal = bet; activeMinesGame = true; currentMultiplier = 1.0;
-    mineIndex = Math.floor(Math.random() * 9);
-    initMinesBoard();
-    document.getElementById('btn-cashout').disabled = false;
-    document.getElementById('btn-cashout').innerText = `Parayı Çek (${currentMultiplier.toFixed(2)}x)`;
-    edaSay("Mayın tarlası başladı! Bas ve katla."); updateUI();
-  }
-
-  function stepMine(idx, btn) {
-    if(!activeMinesGame) return;
-    if(idx === mineIndex) {
-      btn.innerText = '💣'; btn.style.background = '#da3633';
-      edaSay("BOOM! Mayına bastın!"); log(`Mayın: PATLADIN (-${mineBetVal}€)`, "red");
-      activeMinesGame = false; document.getElementById('btn-cashout').disabled = true;
-    } else {
-      btn.innerText = '💎'; btn.disabled = true;
-      currentMultiplier += 0.4;
-      document.getElementById('btn-cashout').innerText = `Parayı Çek (${currentMultiplier.toFixed(2)}x)`;
+  function hostVIP(cost, reqPrestige, reward, name) {
+    if (game.money >= cost && game.prestige >= reqPrestige) {
+      game.money -= cost;
+      updateUI();
+      edaSay(`${name} başladı! VIP konuklar eğleniyor...`);
+      setTimeout(() => {
+        game.money += reward;
+        edaSay(`Muazzam geceydi! ${reward}€ gelir elde ettik!`);
+        log(`VIP Etkinlik (${name}): Net Kar +${(reward - cost).toFixed(2)}€`, "purple");
+        updateUI();
+      }, 1000);
     }
   }
 
-  function cashoutMines() {
-    if(!activeMinesGame) return;
-    let win = mineBetVal * currentMultiplier;
-    money += win;
-    edaSay(`Akıllıca! ${win.toFixed(2)}€ çektin.`);
-    log(`Mayın: Çekildi (+${(win - mineBetVal).toFixed(2)}€)`, "green");
-    activeMinesGame = false; document.getElementById('btn-cashout').disabled = true;
-    updateUI();
+  function hireStaff(cost, cpsGain, name) {
+    if (game.money >= cost) {
+      game.money -= cost;
+      game.cps += cpsGain;
+      log(`${name} işe alındı! +${cpsGain}€/sn`, "green");
+      updateUI();
+    }
   }
 
-  /* --- 3. ÇARKIFFELEK --- */
-  function spinWheel() {
-    if(money < 2) return edaSay("Çark için 2€ lazım!");
-    money -= 2; edaSay("Çark dönüyor...");
-    let mults = [0, 0.5, 1.5, 2.0, 3.0, 5.0, 10.0];
-    let res = mults[Math.floor(Math.random() * mults.length)];
+  function playRoulette(color) {
+    if (game.money < 5) return edaSay("VIP Rulet masası en az 5€ gerektirir!");
+    game.money -= 5;
+    edaSay("Çark dönüyor...");
     setTimeout(() => {
-      let win = 2 * res; money += win;
-      document.getElementById('wheelDisplay').innerText = `${res}x`;
-      if(res > 1) { edaSay(`Tebrikler! ${res}x geldi.`); log(`Çark: +${win - 2}€`, "green"); }
-      else { edaSay("Şansına az veya sıfır geldi!"); log(`Çark: Kayıp -2€`, "red"); }
+      if (Math.random() < 0.45) {
+        game.money += 10;
+        edaSay("Rulet kazandı! İçecekler benden!");
+        log(`Rulet KAZANDIN (+5.00€)`, "green");
+      } else {
+        edaSay("Kasa kazandı...");
+        log(`Rulet Kaybettin (-5.00€)`, "red");
+      }
       updateUI();
     }, 800);
   }
 
-  /* --- 4. ZAR & HOROZ --- */
-  function rollDice() {
-    if(money < 1) return edaSay("1€ lazım!");
-    money -= 1;
-    let d1 = Math.floor(Math.random()*6)+1, d2 = Math.floor(Math.random()*6)+1;
-    let sum = d1 + d2;
-    if(sum === 7 || sum === 11) {
-      money += 3; edaSay(`Toplam ${sum}! Kazandın.`); log(`Zar (${d1}+${d2}): +2€`, "green");
-    } else {
-      edaSay(`Toplam ${sum} geldi. Kasa aldı.`); log(`Zar (${d1}+${d2}): -1€`, "red");
-    }
-    updateUI();
-  }
-
-  function playRooster(name, odds) {
-    if(money < 5) return edaSay("Horoz dövüşü için 5€ lazım!");
-    money -= 5; edaSay("Horozlar kapışıyor...");
-    setTimeout(() => {
-      if(Math.random() < 0.45) {
-        money += 5 * odds; edaSay(`${name} kazandı!`); log(`Horoz Dövüşü KAZANDI: +6.00€`, "green");
-      } else {
-        edaSay(`${name} nakavt oldu...`); log(`Horoz Dövüşü Kaybetti: -5€`, "red");
-      }
-      updateUI();
-    }, 1000);
-  }
-
-  /* --- 5. SPOR --- */
-  function placeSportsBet(team, odds, cost) {
-    if(money < cost) return edaSay("Paran yetersiz!");
-    money -= cost; edaSay("Maç oynanıyor...");
-    setTimeout(() => {
-      if(Math.random() < 0.45) {
-        money += cost * odds; edaSay(`${team} kazandı!`); log(`Spor Bahsi: KAZANDI`, "green");
-      } else {
-        edaSay(`Maçı kaybetti.`); log(`Spor Bahsi: Kaybetti`, "red");
-      }
-      updateUI();
-    }, 1000);
-  }
-
-  /* --- 6. TEFECİ --- */
-  function takeLoan(amt) {
-    money += amt; debt += amt * 1.3; // %30 anında faiz
-    edaSay("Rıza: Parayı aldın ama zamanında öde!"); log(`Tefeciden ${amt}€ borç alındı.`, "red");
-    updateUI();
-  }
-
-  function payLoan() {
-    if(money >= debt && debt > 0) {
-      money -= debt; debt = 0;
-      edaSay("Borcunu kapattın, aferin."); log(`Tefeci borcu ödendi.`, "green");
-      updateUI();
-    } else edaSay("Borcu kapatacak paran yok!");
-  }
-
-  // Tefeci Faiz İşleme
   setInterval(() => {
-    if(debt > 0) { debt *= 1.01; updateUI(); }
-  }, 3000);
+    if (game.cps > 0) {
+      game.money += game.cps;
+      updateUI();
+    }
+  }, 1000);
 
-  initMinesBoard();
   updateUI();
 </script>
 
