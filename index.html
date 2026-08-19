@@ -3,85 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kerem - Kişisel Web Sitem</title>
+    <title>Kerem - Mini Oyun Alanı</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #1a1a2e;
             color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .card {
-            background-color: #16213e;
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-        .profile-img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid #e94560;
-            margin-bottom: 1rem;
-            object-fit: cover;
-        }
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            color: #fff;
-        }
-        p {
-            color: #a2a8d3;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
-        }
-        .social-links {
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
         }
-        .btn {
-            background-color: #0f3460;
-            color: #fff;
-            text-decoration: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.3s;
-            border: 1px solid #e94560;
+        h1 { margin-bottom: 10px; color: #e94560; }
+        #score { font-size: 1.2rem; margin-bottom: 15px; }
+        canvas {
+            background-color: #16213e;
+            border: 3px solid #e94560;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        .btn:hover {
-            background-color: #e94560;
-        }
+        p { color: #a2a8d3; margin-top: 15px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <!-- Profil Fotoğrafı (Kendi resim URL'niz ile değiştirebilirsiniz) -->
-        <img src="https://picsum.photos/200" alt="Profil Fotoğrafı" class="profile-img">
-        
-        <h1>Kerem</h1>
-        <p>Web geliştirme dünyasına adım atıyorum. Projelerimi ve sosyal medya hesaplarımı buradan takip edebilirsiniz!</p>
+    <h1>Yılan Oyunu</h1>
+    <div id="score">Skor: 0</div>
+    <canvas id="gameCanvas" width="300" height="300"></canvas>
+    <p>Oynamak için klavyenizdeki **Yön (Ok) Tuşlarını** kullanın!</p>
 
-        <div class="social-links">
-            <a href="https://github.com/kerembakay423-blip" target="_blank" class="btn">GitHub Profilim</a>
-            <a href="https://instagram.com" target="_blank" class="btn">Instagram</a>
-            <a href="mailto:ornek@email.com" class="btn">Bana Ulaşın</a>
-        </div>
-    </div>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const grid = 15;
+        let count = 0;
+        let score = 0;
+
+        let snake = {
+            x: 150,
+            y: 150,
+            dx: grid,
+            dy: 0,
+            cells: [],
+            maxCells: 4
+        };
+
+        let apple = { x: 60, y: 60 };
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+
+        function loop() {
+            requestAnimationFrame(loop);
+            if (++count < 6) return; // Oyun hızı
+            count = 0;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            snake.x += snake.dx;
+            snake.y += snake.dy;
+
+            // Duvarlardan geçiş
+            if (snake.x < 0) snake.x = canvas.width - grid;
+            else if (snake.x >= canvas.width) snake.x = 0;
+            if (snake.y < 0) snake.y = canvas.height - grid;
+            else if (snake.y >= canvas.height) snake.y = 0;
+
+            snake.cells.unshift({ x: snake.x, y: snake.y });
+
+            if (snake.cells.length > snake.maxCells) {
+                snake.cells.pop();
+            }
+
+            // Elmayı çiz
+            ctx.fillStyle = '#e94560';
+            ctx.fillRect(apple.x, apple.y, grid - 1, grid - 1);
+
+            // Yılanı çiz
+            ctx.fillStyle = '#4ecca3';
+            snake.cells.forEach(function(cell, index) {
+                ctx.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+
+                // Elmayı yeme kontrolü
+                if (cell.x === apple.x && cell.y === apple.y) {
+                    snake.maxCells++;
+                    score += 10;
+                    document.getElementById("score").innerText = "Skor: " + score;
+                    apple.x = getRandomInt(0, 20) * grid;
+                    apple.y = getRandomInt(0, 20) * grid;
+                }
+
+                // Kendi kendini yeme kontrolü
+                for (let i = index + 1; i < snake.cells.length; i++) {
+                    if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+                        snake.x = 150;
+                        snake.y = 150;
+                        snake.cells = [];
+                        snake.maxCells = 4;
+                        snake.dx = grid;
+                        snake.dy = 0;
+                        score = 0;
+                        document.getElementById("score").innerText = "Skor: " + score;
+                        apple.x = getRandomInt(0, 20) * grid;
+                        apple.y = getRandomInt(0, 20) * grid;
+                    }
+                }
+            });
+        }
+
+        // Klavye Kontrolleri
+        document.addEventListener('keydown', function(e) {
+            if (e.which === 37 && snake.dx === 0) { snake.dx = -grid; snake.dy = 0; }
+            else if (e.which === 38 && snake.dy === 0) { snake.dy = -grid; snake.dx = 0; }
+            else if (e.which === 39 && snake.dx === 0) { snake.dx = grid; snake.dy = 0; }
+            else if (e.which === 40 && snake.dy === 0) { snake.dy = grid; snake.dx = 0; }
+        });
+
+        requestAnimationFrame(loop);
+    </script>
 
 </body>
 </html>
