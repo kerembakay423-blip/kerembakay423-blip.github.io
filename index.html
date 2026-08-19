@@ -21,7 +21,7 @@
     * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
     body { background-color: var(--bg-main); color: var(--text-dark); display: flex; justify-content: center; align-items: flex-start; padding: 20px; min-height: 100vh; }
     
-    .app-container { width: 100%; max-width: 950px; background: var(--bg-card); border-radius: 16px; border: 2px solid var(--green-primary); padding: 20px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15); }
+    .app-container { width: 100%; max-width: 950px; background: var(--bg-card); border-radius: 16px; border: 2px solid var(--green-primary); padding: 20px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15); position: relative; }
     
     /* Kurulum Ekranı */
     .setup-screen { text-align: center; padding: 40px 10px; }
@@ -49,14 +49,19 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* BÜYÜK MAÇ & SKOR BOARD ALANI */
-    .scoreboard-card { background: linear-gradient(135deg, var(--green-dark), #022c22); color: #fff; border-radius: 14px; padding: 20px; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
-    .scoreboard-header { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--green-light); opacity: 0.9; margin-bottom: 10px; }
+    /* BÜYÜK SKOR BOARD & MAÇ ALANI */
+    .scoreboard-card { background: linear-gradient(135deg, var(--green-dark), #022c22); color: #fff; border-radius: 14px; padding: 25px; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); position: relative; }
+    .scoreboard-header { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--green-light); opacity: 0.9; margin-bottom: 15px; font-weight: 700; }
+    
     .match-display { display: flex; justify-content: space-between; align-items: center; margin: 15px 0; }
-    .team-box { flex: 1; font-size: 18px; font-weight: 800; }
-    .vs-box { font-size: 24px; font-weight: 900; background: var(--green-primary); color: #fff; padding: 8px 16px; border-radius: 8px; min-width: 90px; }
+    .team-box { flex: 1; font-size: 18px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .team-logo { width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
+    
+    .score-container { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+    .vs-box { font-size: 28px; font-weight: 900; background: var(--green-primary); color: #fff; padding: 10px 24px; border-radius: 12px; min-width: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    .match-time { font-size: 12px; font-weight: 700; color: #a7f3d0; margin-top: 4px; }
 
-    /* Layout Düzeni: Kadro / Tablo Yan Yana */
+    /* Layout Düzeni */
     .game-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     @media (max-width: 768px) { .game-layout { grid-template-columns: 1fr; } }
 
@@ -71,7 +76,6 @@
     .item-title { font-weight: 700; font-size: 13px; color: var(--text-dark); }
     .item-sub { font-size: 11px; color: var(--text-muted); }
 
-    /* Filtrele Kutusu */
     .filter-select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--green-primary); background: #fff; font-weight: 600; margin-bottom: 12px; color: var(--text-dark); }
 
     /* Butonlar */
@@ -81,16 +85,18 @@
     .btn-action { background: var(--green-primary); width: 100%; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 800; color: #fff; cursor: pointer; border: none; }
     .btn-action:hover { background: var(--green-dark); }
 
-    /* Skandal Kutuları */
+    /* PENALTI MODAL EKRANI */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
+    .penalty-card { background: #fff; width: 90%; max-width: 450px; border-radius: 16px; padding: 25px; text-align: center; border: 3px solid var(--green-primary); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .goal-post { background: linear-gradient(to bottom, #e2e8f0, #cbd5e1); border: 4px solid var(--green-dark); border-bottom: none; height: 130px; border-radius: 8px 8px 0 0; position: relative; margin: 20px 0; display: flex; justify-content: space-around; align-items: flex-end; padding-bottom: 10px; }
+    .goalkeeper { font-size: 32px; transition: all 0.3s; position: absolute; top: 20px; }
+    .penalty-btns { display: flex; gap: 10px; margin-top: 15px; }
+    .penalty-btn { flex: 1; padding: 12px; border: none; background: var(--green-primary); color: white; font-weight: 800; border-radius: 8px; cursor: pointer; }
+    .penalty-btn:hover { background: var(--green-dark); }
+
     .scandal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .scandal-card { background: #fff; border: 1px solid var(--red-accent); border-radius: 8px; padding: 10px; text-align: center; }
     .scandal-title { color: var(--red-accent); font-weight: 700; font-size: 12px; margin-bottom: 4px; }
-
-    /* Log Screen */
-    .match-log { background: #f8fafc; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; height: 100px; overflow-y: auto; font-family: monospace; font-size: 11px; color: var(--text-muted); margin-top: 15px; }
-    .log-line { margin-bottom: 3px; }
-    .log-green { color: var(--green-primary); font-weight: bold; }
-    .log-red { color: var(--red-accent); font-weight: bold; }
   </style>
 </head>
 <body>
@@ -136,15 +142,24 @@
       </div>
     </div>
 
-    <!-- BÜYÜK MAÇ SKOR ALANI -->
+    <!-- GELİŞMİŞ SKOR BOARD ALANI -->
     <div class="scoreboard-card">
       <div class="scoreboard-header" id="matchRoundTitle">HAFTA 1 - PREMIER LEAGUE</div>
       <div class="match-display">
-        <div class="team-box" id="homeTeamName">KULÜBÜNÜZ</div>
-        <div class="vs-box" id="scoreDisplay">VS</div>
-        <div class="team-box" id="awayTeamName">RAKİP TAKIM</div>
+        <div class="team-box">
+          <img id="homeLogo" class="team-logo" src="" alt="">
+          <span id="homeTeamName">KULÜBÜNÜZ</span>
+        </div>
+        <div class="score-container">
+          <div class="vs-box" id="scoreDisplay">VS</div>
+          <div class="match-time" id="matchTimeDisplay">Henüz Oynanmadı</div>
+        </div>
+        <div class="team-box">
+          <img id="awayLogo" class="team-logo" src="" alt="">
+          <span id="awayTeamName">RAKİP TAKIM</span>
+        </div>
       </div>
-      <button class="btn-action" id="playMatchBtn" onclick="playMatch()">MAÇI OYNA (HAFTAYI SİMÜLE ET)</button>
+      <button class="btn-action" id="playMatchBtn" onclick="initiateMatch()">MAÇI OYNA (HAFTAYI SİMÜLE ET)</button>
     </div>
 
     <div class="nav-tabs">
@@ -181,12 +196,10 @@
       </div>
     </div>
 
-    <!-- 2. TRANSFER SEKMESİ (LİG TAKIMLARINDAN FİLTRELEME) -->
+    <!-- 2. TRANSFER SEKMESİ -->
     <div id="tab-transfer" class="tab-content">
       <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--green-dark);">Premier League İçi Transferler</h3>
-      <select id="teamFilter" class="filter-select" onchange="renderTransferMarket()">
-        <!-- Takım Filtreleri Dinamik Gelecek -->
-      </select>
+      <select id="teamFilter" class="filter-select" onchange="renderTransferMarket()"></select>
       <div id="transferList"></div>
     </div>
 
@@ -234,37 +247,51 @@
       </div>
       <button class="btn-action btn-danger" style="margin-top: 15px;" onclick="resignJob()">KULÜPTEN İSTİFA ET</button>
     </div>
-
-    <div class="match-log" id="logBox">
-      <div class="log-line log-green">> Kick Off Manager 2026/27 Yeşil & Beyaz Sürüm Başladı!</div>
-    </div>
   </div>
 
 </div>
 
+<!-- IN-GAME INTERACTIVE PENALTY MODAL -->
+<div class="modal-overlay" id="penaltyModal">
+  <div class="penalty-card">
+    <h2 style="color: var(--green-dark);">🚨 PENALTI KAZANDINIZ!</h2>
+    <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Topun başına geçin ve vuracağınız yönü seçin!</p>
+    
+    <div class="goal-post">
+      <div class="goalkeeper" id="gkIcon">🧤</div>
+    </div>
+
+    <div class="penalty-btns">
+      <button class="penalty-btn" onclick="shootPenalty('sol')">⬅️ SOL</button>
+      <button class="penalty-btn" onclick="shootPenalty('orta')">⬆️ ORTA</button>
+      <button class="penalty-btn" onclick="shootPenalty('sag')">➡️ SAĞ</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  // 2026/27 Premier League Veritabanı
+  // Premier League Takımları ve Logoları (Wikimedia Commons Resmî Vektörler)
   let leagueTeams = [
-    { name: "Arsenal", budget: 85, rating: 86, squad: ["David Raya", "William Saliba", "Gabriel Magalhães", "Ben White", "Martin Ødegaard", "Declan Rice", "Bukayo Saka", "Viktor Gyökeres"] },
-    { name: "Aston Villa", budget: 45, rating: 80, squad: ["Emiliano Martínez", "Ezri Konsa", "Pau Torres", "John McGinn", "Youri Tielemans", "Ollie Watkins", "Jadon Sancho"] },
-    { name: "Bournemouth", budget: 25, rating: 76, squad: ["Kepa Arrizabalaga", "Illia Zabarnyi", "Lewis Cook", "Tyler Adams", "Antoine Semenyo", "Evanilson", "Enes Ünal"] },
-    { name: "Brentford", budget: 20, rating: 75, squad: ["Mark Flekken", "Nathan Collins", "Mathias Jensen", "Mikkel Damsgaard", "Yoane Wissa", "Igor Thiago"] },
-    { name: "Brighton", budget: 35, rating: 78, squad: ["Bart Verbruggen", "Lewis Dunk", "Carlos Baleba", "Kaoru Mitoma", "João Pedro", "Danny Welbeck"] },
-    { name: "Chelsea", budget: 90, rating: 84, squad: ["Robert Sánchez", "Reece James", "Levi Colwill", "Moisés Caicedo", "Enzo Fernández", "Cole Palmer", "Nicolas Jackson"] },
-    { name: "Coventry City", budget: 15, rating: 72, squad: ["Carl Rushworth", "Bobby Thomas", "Ben Sheaf", "Haji Wright", "Ellis Simms"] },
-    { name: "Crystal Palace", budget: 25, rating: 76, squad: ["Dean Henderson", "Marc Guéhi", "Adam Wharton", "Ismaïla Sarr", "Jean-Philippe Mateta"] },
-    { name: "Everton", budget: 20, rating: 75, squad: ["Jordan Pickford", "Jarrad Branthwaite", "Idrissa Gueye", "Iliman Ndiaye", "Beto"] },
-    { name: "Fulham", budget: 30, rating: 77, squad: ["Bernd Leno", "Joachim Andersen", "Antonee Robinson", "Andreas Pereira", "Adama Traoré", "Raúl Jiménez"] },
-    { name: "Hull City", budget: 15, rating: 71, squad: ["Konstantinos Tzolakis", "Jack Butland", "Nobel Mendy", "Hidemasa Morita", "Joe Gelhardt"] },
-    { name: "Ipswich Town", budget: 15, rating: 72, squad: ["Christian Walton", "Dara O'Shea", "Sam Morsy", "Kalvin Phillips", "Omari Hutchinson"] },
-    { name: "Liverpool", budget: 95, rating: 87, squad: ["Alisson Becker", "Virgil van Dijk", "Alexis Mac Allister", "Florian Wirtz", "Mohamed Salah", "Alexander Isak"] },
-    { name: "Manchester City", budget: 100, rating: 88, squad: ["Gianluigi Donnarumma", "Rúben Dias", "Joško Gvardiol", "Tijjani Reijnders", "Phil Foden", "Erling Haaland"] },
-    { name: "Manchester United", budget: 80, rating: 83, squad: ["André Onana", "Matthijs de Ligt", "Bruno Fernandes", "Kobbie Mainoo", "Alejandro Garnacho", "Benjamin Šeško"] },
-    { name: "Newcastle United", budget: 60, rating: 81, squad: ["Nick Pope", "Sven Botman", "Sandro Tonali", "Joelinton", "Anthony Gordon"] },
-    { name: "Nottingham Forest", budget: 25, rating: 76, squad: ["Matz Sels", "Murillo", "Morgan Gibbs-White", "Elanga", "Chris Wood"] },
-    { name: "Sunderland", budget: 15, rating: 71, squad: ["Anthony Patterson", "Dan Ballard", "Chris Rigg", "Jobe Bellingham", "Wilson Isidor"] },
-    { name: "Tottenham Hotspur", budget: 70, rating: 82, squad: ["Guglielmo Vicario", "Cristian Romero", "Micky van de Ven", "Rodrigo Bentancur", "Dejan Kulusevski", "Dominic Solanke"] },
-    { name: "West Ham United", budget: 40, rating: 79, squad: ["Alphonse Areola", "Max Kilman", "Lucas Paquetá", "Jarrod Bowen", "Mohammed Kudus", "Niclas Füllkrug"] }
+    { name: "Arsenal", logo: "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg", budget: 85, rating: 86, squad: ["David Raya", "William Saliba", "Gabriel Magalhães", "Martin Ødegaard", "Declan Rice", "Bukayo Saka", "Viktor Gyökeres"] },
+    { name: "Aston Villa", logo: "https://upload.wikimedia.org/wikipedia/en/9/9f/Aston_Villa_logo.svg", budget: 45, rating: 80, squad: ["Emiliano Martínez", "Ezri Konsa", "Pau Torres", "John McGinn", "Youri Tielemans", "Ollie Watkins"] },
+    { name: "Bournemouth", logo: "https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth_%282013%29.svg", budget: 25, rating: 76, squad: ["Kepa Arrizabalaga", "Illia Zabarnyi", "Lewis Cook", "Tyler Adams", "Antoine Semenyo", "Evanilson"] },
+    { name: "Brentford", logo: "https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg", budget: 20, rating: 75, squad: ["Mark Flekken", "Nathan Collins", "Mathias Jensen", "Mikkel Damsgaard", "Yoane Wissa"] },
+    { name: "Brighton", logo: "https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_logo.svg", budget: 35, rating: 78, squad: ["Bart Verbruggen", "Lewis Dunk", "Carlos Baleba", "Kaoru Mitoma", "João Pedro"] },
+    { name: "Chelsea", logo: "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg", budget: 90, rating: 84, squad: ["Robert Sánchez", "Reece James", "Levi Colwill", "Moisés Caicedo", "Cole Palmer", "Nicolas Jackson"] },
+    { name: "Coventry City", logo: "https://upload.wikimedia.org/wikipedia/en/9/94/Coventry_City_FC_logo.svg", budget: 15, rating: 72, squad: ["Carl Rushworth", "Bobby Thomas", "Ben Sheaf", "Haji Wright", "Ellis Simms"] },
+    { name: "Crystal Palace", logo: "https://upload.wikimedia.org/wikipedia/en/a/a2/Crystal_Palace_FC_logo.svg", budget: 25, rating: 76, squad: ["Dean Henderson", "Marc Guéhi", "Adam Wharton", "Ismaïla Sarr", "Jean-Philippe Mateta"] },
+    { name: "Everton", logo: "https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg", budget: 20, rating: 75, squad: ["Jordan Pickford", "Jarrad Branthwaite", "Idrissa Gueye", "Iliman Ndiaye", "Beto"] },
+    { name: "Fulham", logo: "https://upload.wikimedia.org/wikipedia/en/b/b4/Fulham_FC_%28shield%29.svg", budget: 30, rating: 77, squad: ["Bernd Leno", "Joachim Andersen", "Antonee Robinson", "Andreas Pereira", "Raúl Jiménez"] },
+    { name: "Hull City", logo: "https://upload.wikimedia.org/wikipedia/en/5/54/Hull_City_A.F.C._logo.svg", budget: 15, rating: 71, squad: ["Konstantinos Tzolakis", "Jack Butland", "Nobel Mendy", "Hidemasa Morita"] },
+    { name: "Ipswich Town", logo: "https://upload.wikimedia.org/wikipedia/en/4/43/Ipswich_Town.svg", budget: 15, rating: 72, squad: ["Christian Walton", "Dara O'Shea", "Sam Morsy", "Kalvin Phillips", "Omari Hutchinson"] },
+    { name: "Liverpool", logo: "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg", budget: 95, rating: 87, squad: ["Alisson Becker", "Virgil van Dijk", "Alexis Mac Allister", "Florian Wirtz", "Mohamed Salah"] },
+    { name: "Manchester City", logo: "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg", budget: 100, rating: 88, squad: ["Gianluigi Donnarumma", "Rúben Dias", "Joško Gvardiol", "Phil Foden", "Erling Haaland"] },
+    { name: "Manchester United", logo: "https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg", budget: 80, rating: 83, squad: ["André Onana", "Matthijs de Ligt", "Bruno Fernandes", "Alejandro Garnacho", "Benjamin Šeško"] },
+    { name: "Newcastle United", logo: "https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg", budget: 60, rating: 81, squad: ["Nick Pope", "Sven Botman", "Sandro Tonali", "Joelinton", "Anthony Gordon"] },
+    { name: "Nottingham Forest", logo: "https://upload.wikimedia.org/wikipedia/en/e/e5/Nottingham_Forest_F.C._logo.svg", budget: 25, rating: 76, squad: ["Matz Sels", "Murillo", "Morgan Gibbs-White", "Elanga", "Chris Wood"] },
+    { name: "Sunderland", logo: "https://upload.wikimedia.org/wikipedia/en/7/77/Logo_Sunderland.svg", budget: 15, rating: 71, squad: ["Anthony Patterson", "Dan Ballard", "Chris Rigg", "Jobe Bellingham"] },
+    { name: "Tottenham Hotspur", logo: "https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg", budget: 70, rating: 82, squad: ["Guglielmo Vicario", "Cristian Romero", "Micky van de Ven", "Dejan Kulusevski", "Dominic Solanke"] },
+    { name: "West Ham United", logo: "https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg", budget: 40, rating: 79, squad: ["Alphonse Areola", "Max Kilman", "Lucas Paquetá", "Jarrod Bowen", "Mohammed Kudus"] }
   ];
 
   let managerState = {
@@ -273,58 +300,34 @@
     budget: 0,
     debt: 0,
     week: 1,
-    nextMatchFixed: false
+    nextMatchFixed: false,
+    penaltyGoalAdded: 0
   };
 
-  let schedule = []; // 38 Haftalık Fikstür
-
-  function log(msg, colorClass = "") {
-    const box = document.getElementById('logBox');
-    const div = document.createElement('div');
-    div.className = `log-line ${colorClass}`;
-    div.innerText = `> ${msg}`;
-    box.appendChild(div);
-    box.scrollTop = box.scrollHeight;
-  }
+  let schedule = [];
 
   function startGame() {
     const input = document.getElementById('managerNameInput').value.trim();
-    if (!input) {
-      alert("Lütfen bir menajer adı girin!");
-      return;
-    }
+    if (!input) return alert("Lütfen bir menajer adı girin!");
     managerState.name = input;
 
-    // Lig Tablosu İstatistiklerini Başlat
-    leagueTeams.forEach(t => {
-      t.played = 0;
-      t.won = 0;
-      t.drawn = 0;
-      t.lost = 0;
-      t.points = 0;
-    });
+    leagueTeams.forEach(t => { t.played = 0; t.won = 0; t.drawn = 0; t.lost = 0; t.points = 0; });
 
-    // Rastgele Takım Seçimi
     managerState.myTeamIndex = Math.floor(Math.random() * leagueTeams.length);
     let myTeam = leagueTeams[managerState.myTeamIndex];
     managerState.budget = myTeam.budget;
 
-    generateSchedule(); // Fikstür Hazırla (38 Hafta)
+    generateSchedule();
 
     document.getElementById('setupScreen').style.display = 'none';
     document.getElementById('gameScreen').style.display = 'block';
 
-    log(`Menajer ${managerState.name}, ${myTeam.name} kulübünün başına geçti!`, "log-green");
-    
     setupTransferFilters();
     updateUI();
   }
 
-  // 38 Haftalık Çift Devreli Fikstür Oluşturucu
   function generateSchedule() {
-    let teams = leagueTeams.map((_, idx) => idx);
-    let n = teams.length;
-
+    let n = leagueTeams.length;
     for (let round = 0; round < (n - 1) * 2; round++) {
       let matches = [];
       let isSecondHalf = round >= (n - 1);
@@ -335,11 +338,8 @@
         let away = (n - 1 - i + r) % (n - 1);
         if (i === 0) away = n - 1;
 
-        if (isSecondHalf) {
-          matches.push({ home: away, away: home });
-        } else {
-          matches.push({ home: home, away: away });
-        }
+        if (isSecondHalf) matches.push({ home: away, away: home });
+        else matches.push({ home: home, away: away });
       }
       schedule.push(matches);
     }
@@ -357,15 +357,18 @@
     document.getElementById('dispDebt').innerText = managerState.debt.toFixed(1);
     document.getElementById('loanVal').innerText = managerState.debt.toFixed(1);
 
-    // Gelecek Maç Bilgisini Skor Board'a Yansıt
     if (managerState.week <= 38) {
       document.getElementById('matchRoundTitle').innerText = `HAFTA ${managerState.week} - PREMIER LEAGUE`;
       let weekMatches = schedule[managerState.week - 1];
       let myMatch = weekMatches.find(m => m.home === managerState.myTeamIndex || m.away === managerState.myTeamIndex);
 
-      document.getElementById('homeTeamName').innerText = leagueTeams[myMatch.home].name;
-      document.getElementById('awayTeamName').innerText = leagueTeams[myMatch.away].name;
-      document.getElementById('scoreDisplay').innerText = "VS";
+      let homeTeam = leagueTeams[myMatch.home];
+      let awayTeam = leagueTeams[myMatch.away];
+
+      document.getElementById('homeTeamName').innerText = homeTeam.name;
+      document.getElementById('homeLogo').src = homeTeam.logo;
+      document.getElementById('awayTeamName').innerText = awayTeam.name;
+      document.getElementById('awayLogo').src = awayTeam.logo;
     }
 
     renderSquad();
@@ -407,14 +410,107 @@
     });
   }
 
-  /* SADECE LİG TAKIMLARINDAN TRANSFER YAPMA */
+  /* MAÇ BAŞLATMA VE PENALTI KONTROLÜ */
+  function initiateMatch() {
+    if (managerState.week > 38) return;
+
+    // %25 ihtimalle penaltı kazanılır
+    if (Math.random() < 0.25 && !managerState.nextMatchFixed) {
+      document.getElementById('penaltyModal').style.display = 'flex';
+      document.getElementById('gkIcon').style.left = '45%';
+    } else {
+      executePlayMatch();
+    }
+  }
+
+  function shootPenalty(userChoice) {
+    let corners = ['sol', 'orta', 'sag'];
+    let gkChoice = corners[Math.floor(Math.random() * corners.length)];
+    let gkIcon = document.getElementById('gkIcon');
+
+    if (gkChoice === 'sol') gkIcon.style.left = '10%';
+    else if (gkChoice === 'orta') gkIcon.style.left = '45%';
+    else gkIcon.style.left = '80%';
+
+    setTimeout(() => {
+      if (userChoice !== gkChoice) {
+        alert("GOOOOL! Penaltı golle sonuçlandı! 🎉");
+        managerState.penaltyGoalAdded = 1;
+      } else {
+        alert("PENALTI KAÇTI! Kaleci köşeyi doğru tahmin etti! 🧤");
+        managerState.penaltyGoalAdded = 0;
+      }
+      document.getElementById('penaltyModal').style.display = 'none';
+      executePlayMatch();
+    }, 400);
+  }
+
+  function executePlayMatch() {
+    let weekMatches = schedule[managerState.week - 1];
+
+    weekMatches.forEach(m => {
+      let home = leagueTeams[m.home];
+      let away = leagueTeams[m.away];
+      let hGoals = 0, aGoals = 0;
+
+      if (m.home === managerState.myTeamIndex || m.away === managerState.myTeamIndex) {
+        if (managerState.nextMatchFixed) {
+          if (Math.random() < 0.15) {
+            alert("ŞİKE TESPİT EDİLDİ! Küme düşürüldünüz.");
+            location.reload(); return;
+          }
+          if (m.home === managerState.myTeamIndex) { hGoals = 3; aGoals = 0; }
+          else { hGoals = 0; aGoals = 3; }
+          managerState.nextMatchFixed = false;
+        } else {
+          hGoals = Math.floor(Math.random() * (home.rating / 24));
+          aGoals = Math.floor(Math.random() * (away.rating / 24));
+
+          // Penaltı golünü ekle
+          if (m.home === managerState.myTeamIndex) hGoals += managerState.penaltyGoalAdded;
+          else aGoals += managerState.penaltyGoalAdded;
+          managerState.penaltyGoalAdded = 0;
+        }
+
+        // Skor Paneli Güncellemesi (Uzatma Dakikası Dahil)
+        let extraMin = Math.floor(Math.random() * 5) + 1;
+        document.getElementById('scoreDisplay').innerText = `${hGoals} - ${aGoals}`;
+        document.getElementById('matchTimeDisplay').innerText = `MAÇ SONU (90+${extraMin}')`;
+
+        let isHome = m.home === managerState.myTeamIndex;
+        let myGoals = isHome ? hGoals : aGoals;
+        let oppGoals = isHome ? aGoals : hGoals;
+
+        if (myGoals > oppGoals) managerState.budget += 2.0;
+        else if (myGoals === oppGoals) managerState.budget += 0.8;
+      } else {
+        hGoals = Math.floor(Math.random() * (home.rating / 25));
+        aGoals = Math.floor(Math.random() * (away.rating / 25));
+      }
+
+      home.played++; away.played++;
+      if (hGoals > aGoals) { home.won++; home.points += 3; away.lost++; }
+      else if (hGoals === aGoals) { home.drawn++; home.points += 1; away.drawn++; away.points += 1; }
+      else { away.won++; away.points += 3; home.lost++; }
+    });
+
+    managerState.week++;
+
+    if (managerState.week > 38) {
+      document.getElementById('playMatchBtn').disabled = true;
+      document.getElementById('playMatchBtn').innerText = "SEZON BİTTİ";
+      let champion = [...leagueTeams].sort((a, b) => b.points - a.points)[0];
+      setTimeout(() => alert(`🏆 ŞAMPIYON: ${champion.name} (${champion.points} Puan)`), 500);
+    }
+
+    updateUI();
+  }
+
   function setupTransferFilters() {
     const select = document.getElementById('teamFilter');
     select.innerHTML = '';
     leagueTeams.forEach((t, idx) => {
-      if (idx !== managerState.myTeamIndex) {
-        select.innerHTML += `<option value="${idx}">${t.name}</option>`;
-      }
+      if (idx !== managerState.myTeamIndex) select.innerHTML += `<option value="${idx}">${t.name}</option>`;
     });
     renderTransferMarket();
   }
@@ -426,12 +522,12 @@
     marketBox.innerHTML = '';
 
     if (!targetTeam || targetTeam.squad.length === 0) {
-      marketBox.innerHTML = '<div style="font-size: 12px; color: var(--text-muted);">Bu takımda satılık oyuncu kalmadı.</div>';
+      marketBox.innerHTML = '<div style="font-size: 12px; color: var(--text-muted);">Satılık oyuncu kalmadı.</div>';
       return;
     }
 
     targetTeam.squad.forEach((player, pIdx) => {
-      let price = Math.floor(targetTeam.rating * 0.4); // Rating bazlı değer
+      let price = Math.floor(targetTeam.rating * 0.4);
       marketBox.innerHTML += `
         <div class="item-card">
           <div class="item-info">
@@ -447,105 +543,13 @@
     if (managerState.budget >= price) {
       let sellerTeam = leagueTeams[teamIdx];
       let playerName = sellerTeam.squad.splice(playerIdx, 1)[0];
-      
       managerState.budget -= price;
       leagueTeams[managerState.myTeamIndex].squad.push(playerName);
       leagueTeams[managerState.myTeamIndex].rating += 1;
-
-      log(`${sellerTeam.name} takımından ${playerName} £${price}M karşılığında alındı!`, "log-green");
-      updateUI();
-      renderTransferMarket();
+      updateUI(); renderTransferMarket();
     } else {
-      log("Bütçeniz yetersiz!", "log-red");
+      alert("Bütçe yetersiz!");
     }
-  }
-
-  /* MAÇ VE SİMÜLASYON */
-  function playMatch() {
-    if (managerState.week > 38) {
-      alert("Sezon tamamlandı!");
-      return;
-    }
-
-    let weekMatches = schedule[managerState.week - 1];
-
-    // Bütün lig maçlarını simüle et
-    weekMatches.forEach(m => {
-      let home = leagueTeams[m.home];
-      let away = leagueTeams[m.away];
-
-      let hGoals = 0;
-      let aGoals = 0;
-
-      // Kullanıcının Maçı mı?
-      if (m.home === managerState.myTeamIndex || m.away === managerState.myTeamIndex) {
-        if (managerState.nextMatchFixed) {
-          if (Math.random() < 0.15) {
-            alert("ŞİKE TESPİT EDİLDİ! Küme düşürüldünüz ve kovuldunuz.");
-            location.reload();
-            return;
-          }
-          if (m.home === managerState.myTeamIndex) { hGoals = 3; aGoals = 0; }
-          else { hGoals = 0; aGoals = 3; }
-          managerState.nextMatchFixed = false;
-          log("[ŞİKE] Maç masa başında kazanıldı!", "log-red");
-        } else {
-          hGoals = Math.floor(Math.random() * (home.rating / 24));
-          aGoals = Math.floor(Math.random() * (away.rating / 24));
-        }
-
-        document.getElementById('scoreDisplay').innerText = `${hGoals} - ${aGoals}`;
-        
-        let isHome = m.home === managerState.myTeamIndex;
-        let myGoals = isHome ? hGoals : aGoals;
-        let oppGoals = isHome ? aGoals : hGoals;
-        let oppName = isHome ? away.name : home.name;
-
-        if (myGoals > oppGoals) {
-          managerState.budget += 2.0;
-          log(`Hafta ${managerState.week}: GALİBİYET! ${oppName} takımını ${myGoals}-${oppGoals} yendiniz (+£2M Prim).`, "log-green");
-        } else if (myGoals === oppGoals) {
-          managerState.budget += 0.8;
-          log(`Hafta ${managerState.week}: BERABERLİK. ${oppName} ile ${myGoals}-${oppGoals} berabere kaldınız.`, "log-green");
-        } else {
-          log(`Hafta ${managerState.week}: MAĞLUBİYET. ${oppName} takımına ${myGoals}-${oppGoals} yenildiniz.`, "log-red");
-        }
-      } else {
-        // Yapay Zeka Maçları
-        hGoals = Math.floor(Math.random() * (home.rating / 25));
-        aGoals = Math.floor(Math.random() * (away.rating / 25));
-      }
-
-      // Puanları İşle
-      home.played++; away.played++;
-      if (hGoals > aGoals) {
-        home.won++; home.points += 3; away.lost++;
-      } else if (hGoals === aGoals) {
-        home.drawn++; home.points += 1;
-        away.drawn++; away.points += 1;
-      } else {
-        away.won++; away.points += 3; home.lost++;
-      }
-    });
-
-    managerState.week++;
-
-    // ŞAMPİYONLUK KONTROLÜ (38 Hafta Bittiğinde)
-    if (managerState.week > 38) {
-      document.getElementById('playMatchBtn').disabled = true;
-      document.getElementById('playMatchBtn').innerText = "SEZON BİTTİ";
-
-      let champion = [...leagueTeams].sort((a, b) => b.points - a.points)[0];
-      setTimeout(() => {
-        if (champion.name === leagueTeams[managerState.myTeamIndex].name) {
-          alert(`🏆 TEBRİKLER! ${champion.points} PUANLA PREMIER LEAGUE ŞAMPİYONU OLDUNUZ! 🎉`);
-        } else {
-          alert(`SEZON BİTTİ. Şampiyon ${champion.points} puanla ${champion.name} oldu.`);
-        }
-      }, 500);
-    }
-
-    updateUI();
   }
 
   function switchTab(tabName) {
@@ -555,73 +559,13 @@
     document.getElementById(`tab-${tabName}`).classList.add('active');
   }
 
-  /* FİNANS & OLAYLAR */
-  function takeLoan(amt) {
-    managerState.budget += amt;
-    managerState.debt += amt * 1.2;
-    log(`Banka kredisi alındı: +£${amt}M`, "log-green");
-    updateUI();
-  }
-
-  function payLoan(amt) {
-    if (managerState.debt <= 0) return log("Borcunuz yok.", "log-green");
-    if (managerState.budget >= amt) {
-      managerState.budget -= amt;
-      managerState.debt -= amt;
-      if (managerState.debt < 0) managerState.debt = 0;
-      log(`Borç ödendi: -£${amt}M`, "log-green");
-      updateUI();
-    } else {
-      log("Yetersiz bütçe!", "log-red");
-    }
-  }
-
-  function fightBoard() {
-    let rand = Math.random();
-    if (rand < 0.20) {
-      alert("Başkan seni kovdu! Oyunu kaybettin.");
-      location.reload();
-    } else if (rand < 0.60) {
-      managerState.budget += 15;
-      log("Başkanla tartıştın ve +£15M ek bütçe aldın!", "log-green");
-    } else {
-      log("Başkan talebini reddetti.", "log-red");
-    }
-    updateUI();
-  }
-
-  function fightPlayer() {
-    let myTeam = leagueTeams[managerState.myTeamIndex];
-    if (Math.random() < 0.5) {
-      myTeam.rating += 1;
-      log("Soyunma odasında kontrolü sağladın. Takım gücü +1!", "log-green");
-    } else {
-      myTeam.rating -= 1;
-      log("Kavga büyüdü, takım morali bozuldu. Güç -1.", "log-red");
-    }
-    updateUI();
-  }
-
-  function attackFan() {
-    managerState.budget -= 5;
-    log("Taraftara tepki gösterdiğin için £5M ceza kesildi!", "log-red");
-    updateUI();
-  }
-
-  function fixMatch() {
-    if (managerState.budget < 5) return log("Şike için en az £5M bütçe lazım!", "log-red");
-    managerState.budget -= 5;
-    managerState.nextMatchFixed = true;
-    log("Sıradaki maç ayarlandı!", "log-red");
-    updateUI();
-  }
-
-  function resignJob() {
-    if (confirm("İstifa etmek istediğine emin misin?")) {
-      alert("İstifa ettiniz. Kariyeriniz bitti.");
-      location.reload();
-    }
-  }
+  function takeLoan(amt) { managerState.budget += amt; managerState.debt += amt * 1.2; updateUI(); }
+  function payLoan(amt) { if (managerState.budget >= amt && managerState.debt > 0) { managerState.budget -= amt; managerState.debt -= amt; updateUI(); } }
+  function fightBoard() { if (Math.random() < 0.2) { alert("Kovuldunuz!"); location.reload(); } else managerState.budget += 15; updateUI(); }
+  function fightPlayer() { leagueTeams[managerState.myTeamIndex].rating += (Math.random() < 0.5 ? 1 : -1); updateUI(); }
+  function attackFan() { managerState.budget -= 5; updateUI(); }
+  function fixMatch() { if (managerState.budget >= 5) { managerState.budget -= 5; managerState.nextMatchFixed = true; alert("Şike ayarlandı!"); updateUI(); } }
+  function resignJob() { if (confirm("İstifa etmek istediğinize emin misiniz?")) location.reload(); }
 </script>
 
 </body>
