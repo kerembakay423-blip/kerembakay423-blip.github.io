@@ -1,588 +1,267 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kick Off Manager 2026/27</title>
-  <style>
-    :root {
-      --bg-main: #f4f7f6;
-      --bg-card: #ffffff;
-      --green-primary: #10b981;
-      --green-dark: #047857;
-      --green-light: #e6f4ea;
-      --text-dark: #0f172a;
-      --text-muted: #64748b;
-      --border-color: #cbd5e1;
-      --red-accent: #ef4444;
-      --gold-accent: #f59e0b;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kimlik Hırsızı - Güvenlik Terminali</title>
+    <style>
+        :root {
+            --bg-blue: #ebf8ff;
+            --primary-blue: #2563eb;
+            --dark-blue: #1e3a8a;
+            --light-blue: #dbeafe;
+            --white: #ffffff;
+            --danger-red: #ef4444;
+            --success-green: #10b981;
+        }
 
-    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; }
-    body { background-color: var(--bg-main); color: var(--text-dark); display: flex; justify-content: center; align-items: flex-start; padding: 20px; min-height: 100vh; }
-    
-    .app-container { width: 100%; max-width: 950px; background: var(--bg-card); border-radius: 16px; border: 2px solid var(--green-primary); padding: 20px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15); position: relative; }
-    
-    /* Kurulum Ekranı */
-    .setup-screen { text-align: center; padding: 40px 10px; }
-    .setup-screen h1 { color: var(--green-dark); font-size: 36px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-    .input-group { margin: 25px 0; }
-    .input-group input { width: 80%; max-width: 320px; padding: 12px 16px; background: #fff; border: 2px solid var(--green-primary); border-radius: 8px; color: var(--text-dark); font-size: 16px; text-align: center; outline: none; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    /* Ana Başlık */
-    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--green-light); padding-bottom: 15px; margin-bottom: 15px; }
-    .manager-title { font-size: 20px; font-weight: 800; color: var(--green-dark); }
-    .club-title { font-size: 15px; color: var(--text-muted); margin-top: 2px; }
-    .finance-badge { background: var(--green-light); color: var(--green-dark); padding: 8px 16px; border-radius: 20px; font-weight: 800; font-size: 14px; border: 1px solid var(--green-primary); }
+        body {
+            background-color: var(--bg-blue);
+            color: var(--dark-blue);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-    /* İstatistik Tablosu */
-    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
-    .stat-box { background: var(--green-light); padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); text-align: center; }
-    .stat-label { font-size: 10px; color: var(--green-dark); text-transform: uppercase; font-weight: 700; }
-    .stat-val { font-size: 16px; font-weight: 800; margin-top: 2px; color: var(--text-dark); }
+        .terminal-container {
+            background-color: var(--white);
+            border: 3px solid var(--primary-blue);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+        }
 
-    /* Sekmeler */
-    .nav-tabs { display: flex; gap: 6px; margin-bottom: 15px; background: var(--green-light); padding: 6px; border-radius: 10px; }
-    .nav-btn { flex: 1; padding: 10px 4px; border: none; background: transparent; color: var(--green-dark); font-weight: 700; font-size: 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; text-align: center; }
-    .nav-btn.active { background: var(--green-primary); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .terminal-header {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
 
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            background-color: var(--light-blue);
+            padding: 10px 20px;
+            font-weight: 600;
+        }
 
-    /* SKOR BOARD ALANI */
-    .scoreboard-card { background: linear-gradient(135deg, var(--green-dark), #022c22); color: #fff; border-radius: 14px; padding: 25px; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); position: relative; }
-    .scoreboard-header { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--green-light); opacity: 0.9; margin-bottom: 15px; font-weight: 700; }
-    
-    .match-display { display: flex; justify-content: space-between; align-items: center; margin: 15px 0; }
-    .team-box { flex: 1; font-size: 16px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-    
-    /* Logo / Fallback Rozet Stili */
-    .logo-container { width: 68px; height: 68px; display: flex; justify-content: center; align-items: center; border-radius: 50%; background: #ffffff; border: 2px solid var(--green-primary); overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.3); position: relative; }
-    .team-logo { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
-    .fallback-badge { width: 100%; height: 100%; background: var(--green-dark); color: #ffffff; display: flex; justify-content: center; align-items: center; font-size: 20px; font-weight: 900; position: absolute; top: 0; left: 0; }
+        .content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-    .score-container { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-    .vs-box { font-size: 28px; font-weight: 900; background: var(--green-primary); color: #fff; padding: 10px 24px; border-radius: 12px; min-width: 120px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-    .match-time { font-size: 12px; font-weight: 700; color: #a7f3d0; margin-top: 4px; }
+        .visitor-card {
+            background-color: var(--bg-blue);
+            border: 2px dashed var(--primary-blue);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
 
-    /* Layout Düzeni */
-    .game-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    @media (max-width: 768px) { .game-layout { grid-template-columns: 1fr; } }
+        .visitor-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--dark-blue);
+            margin-top: 5px;
+        }
 
-    /* Tablo Tasarımı */
-    .league-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-    .league-table th, .league-table td { padding: 6px 8px; text-align: center; border-bottom: 1px solid var(--border-color); }
-    .league-table th { background: var(--green-light); color: var(--green-dark); font-weight: 700; }
-    .league-table tr.my-team { background: #d1fae5; font-weight: bold; }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-    /* Listeler & Kartlar */
-    .item-card { background: #fff; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
-    .item-title { font-weight: 700; font-size: 13px; color: var(--text-dark); }
-    .item-sub { font-size: 11px; color: var(--text-muted); }
-    .player-rating-badge { background: var(--gold-accent); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 800; margin-left: 6px; }
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
 
-    .filter-select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--green-primary); background: #fff; font-weight: 600; margin-bottom: 12px; color: var(--text-dark); }
+        input[type="text"] {
+            padding: 12px;
+            border: 2px solid var(--light-blue);
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+            text-transform: uppercase;
+        }
 
-    /* Butonlar */
-    .btn { background: var(--green-primary); color: #fff; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 700; font-size: 12px; cursor: pointer; transition: 0.2s; }
-    .btn:hover { background: var(--green-dark); }
-    .btn-danger { background: var(--red-accent); }
-    .btn-action { background: var(--green-primary); width: 100%; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 800; color: #fff; cursor: pointer; border: none; }
-    .btn-action:hover { background: var(--green-dark); }
+        input[type="text"]:focus {
+            border-color: var(--primary-blue);
+        }
 
-    /* PENALTI MODAL EKRANI */
-    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; }
-    .penalty-card { background: #fff; width: 90%; max-width: 450px; border-radius: 16px; padding: 25px; text-align: center; border: 3px solid var(--green-primary); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-    .goal-post { background: linear-gradient(to bottom, #e2e8f0, #cbd5e1); border: 4px solid var(--green-dark); border-bottom: none; height: 130px; border-radius: 8px 8px 0 0; position: relative; margin: 20px 0; display: flex; justify-content: space-around; align-items: flex-end; padding-bottom: 10px; }
-    .goalkeeper { font-size: 32px; transition: all 0.3s; position: absolute; top: 20px; }
-    .penalty-btns { display: flex; gap: 10px; margin-top: 15px; }
-    .penalty-btn { flex: 1; padding: 12px; border: none; background: var(--green-primary); color: white; font-weight: 800; border-radius: 8px; cursor: pointer; }
-    .penalty-btn:hover { background: var(--green-dark); }
+        .analysis-box {
+            background-color: var(--light-blue);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: 600;
+        }
 
-    .scandal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .scandal-card { background: #fff; border: 1px solid var(--red-accent); border-radius: 8px; padding: 10px; text-align: center; }
-    .scandal-title { color: var(--red-accent); font-weight: 700; font-size: 12px; margin-bottom: 4px; }
-  </style>
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-accept {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-reject {
+            background-color: var(--white);
+            color: var(--danger-red);
+            border: 2px solid var(--danger-red);
+        }
+
+        .btn-scan {
+            background-color: var(--dark-blue);
+            color: var(--white);
+            margin-bottom: 5px;
+        }
+    </style>
 </head>
 <body>
 
-<div class="app-container">
-  
-  <!-- KURULUM EKRANI -->
-  <div id="setupScreen" class="setup-screen">
-    <h1>KICK OFF MANAGER</h1>
-    <p style="color: var(--text-muted); font-size: 14px;">Premier League 2026/27 • Birebir 20 Takım</p>
-    <div class="input-group">
-      <input type="text" id="managerNameInput" placeholder="Menajer Adınızı Girin..." maxlength="20">
-    </div>
-    <button class="btn btn-action" style="width: 80%; max-width: 320px;" onclick="startGame()">KARİYERİ BAŞLAT (RASTGELE TAKIM)</button>
-  </div>
-
-  <!-- ANA OYUN EKRANI -->
-  <div id="gameScreen" style="display: none;">
-    <div class="header">
-      <div>
-        <div class="manager-title" id="dispManagerName">Menajer</div>
-        <div class="club-title" id="dispClubName">Takım Loading...</div>
-      </div>
-      <div class="finance-badge">Bütçe: £<span id="dispBudget">0</span>M</div>
-    </div>
-
-    <div class="stats-grid">
-      <div class="stat-box">
-        <div class="stat-label">Kadro Gücü</div>
-        <div class="stat-val" id="dispRating">0</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">Hafta</div>
-        <div class="stat-val" id="dispWeek">1 / 38</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">Puan</div>
-        <div class="stat-val" id="dispPoints">0</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">Borç</div>
-        <div class="stat-val" style="color: var(--red-accent);" id="dispDebt">£0M</div>
-      </div>
-    </div>
-
-    <!-- SKOR BOARD ALANI -->
-    <div class="scoreboard-card">
-      <div class="scoreboard-header" id="matchRoundTitle">HAFTA 1 - PREMIER LEAGUE</div>
-      <div class="match-display">
-        <div class="team-box">
-          <div class="logo-container" id="homeLogoBox"></div>
-          <span id="homeTeamName">KULÜBÜNÜZ</span>
-        </div>
-        <div class="score-container">
-          <div class="vs-box" id="scoreDisplay">VS</div>
-          <div class="match-time" id="matchTimeDisplay">Henüz Oynanmadı</div>
-        </div>
-        <div class="team-box">
-          <div class="logo-container" id="awayLogoBox"></div>
-          <span id="awayTeamName">RAKİP TAKIM</span>
-        </div>
-      </div>
-      <button class="btn-action" id="playMatchBtn" onclick="initiateMatch()">MAÇI OYNA (HAFTAYI SİMÜLE ET)</button>
-    </div>
-
-    <div class="nav-tabs">
-      <button class="nav-btn active" onclick="switchTab('league')">🏆 Puan Durumu & Kadro</button>
-      <button class="nav-btn" onclick="switchTab('transfer')">🔄 Transfer Pazarı</button>
-      <button class="nav-btn" onclick="switchTab('finance')">🏦 Finans & Borç</button>
-      <button class="nav-btn" onclick="switchTab('scandal')">🔥 Olaylar & Şike</button>
-    </div>
-
-    <!-- 1. PUAN DURUMU VE KADRO SEKMESİ -->
-    <div id="tab-league" class="tab-content active">
-      <div class="game-layout">
-        <div>
-          <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--green-dark);">📋 Kadronuz</h3>
-          <div id="squadList"></div>
-        </div>
-        <div>
-          <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--green-dark);">📊 Premier League Puan Durumu</h3>
-          <table class="league-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th style="text-align: left;">Takım</th>
-                <th>O</th>
-                <th>G</th>
-                <th>B</th>
-                <th>M</th>
-                <th>P</th>
-              </tr>
-            </thead>
-            <tbody id="leagueTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. TRANSFER SEKMESİ -->
-    <div id="tab-transfer" class="tab-content">
-      <h3 style="font-size: 14px; margin-bottom: 8px; color: var(--green-dark);">Premier League Transfer Pazarı</h3>
-      <select id="teamFilter" class="filter-select" onchange="renderTransferMarket()"></select>
-      <div id="transferList"></div>
-    </div>
-
-    <!-- 3. FİNANS & BORÇ SEKMESİ -->
-    <div id="tab-finance" class="tab-content">
-      <div class="item-card">
-        <div class="item-info">
-          <div class="item-title">🏦 Banka Kredisi Çek (£10M)</div>
-          <div class="item-sub">Faiz %20. Gelecek haftalarda ödersin.</div>
-        </div>
-        <button class="btn" onclick="takeLoan(10)">Kredi Al</button>
-      </div>
-      <div class="item-card">
-        <div class="item-info">
-          <div class="item-title">💰 Banka Borcu Öde (£10M)</div>
-          <div class="item-sub">Mevcut Borç: £<span id="loanVal">0</span>M</div>
-        </div>
-        <button class="btn" onclick="payLoan(10)">Borç Öde</button>
-      </div>
-    </div>
-
-    <!-- 4. OLAYLAR & ŞİKE SEKMESİ -->
-    <div id="tab-scandal" class="tab-content">
-      <div class="scandal-grid">
-        <div class="scandal-card">
-          <div class="scandal-title">👔 Başkanla Kavga Et</div>
-          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">Ek bütçe istersin. Kovulma riski %20.</p>
-          <button class="btn btn-danger" onclick="fightBoard()">Kavga Et</button>
-        </div>
-        <div class="scandal-card">
-          <div class="scandal-title">🗣️ Oyuncuyla Kavga Et</div>
-          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">Disiplin sağlarsın. Moral/Güç değişebilir.</p>
-          <button class="btn btn-danger" onclick="fightPlayer()">Kavga Et</button>
-        </div>
-        <div class="scandal-card" style="margin-top: 8px;">
-          <div class="scandal-title">🥊 Taraftara Saldır</div>
-          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">Tepki gösterirsin. Para cezası alırsın.</p>
-          <button class="btn btn-danger" onclick="attackFan()">Saldır</button>
-        </div>
-        <div class="scandal-card" style="margin-top: 8px;">
-          <div class="scandal-title">🕵️ Şike Yap (£5M)</div>
-          <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 6px;">Kesin galibiyet. Yakalanırsan küme düşersin!</p>
-          <button class="btn btn-danger" onclick="fixMatch()">Şike Yap (£5M)</button>
-        </div>
-      </div>
-      <button class="btn-action btn-danger" style="margin-top: 15px;" onclick="resignJob()">KULÜPTEN İSTİFA ET</button>
-    </div>
-  </div>
-
-</div>
-
-<!-- INTERACTIVE PENALTY MODAL -->
-<div class="modal-overlay" id="penaltyModal">
-  <div class="penalty-card">
-    <h2 style="color: var(--green-dark);">🚨 PENALTI KAZANDINIZ!</h2>
-    <p style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Topun başına geçin ve vuracağınız yönü seçin!</p>
+<div class="terminal-container">
+    <div class="terminal-header">GÜVENLİK TERMİNALİ v1.0</div>
     
-    <div class="goal-post">
-      <div class="goalkeeper" id="gkIcon">🧤</div>
+    <div class="stats-bar">
+        <span>PUAN: <span id="score">0</span></span>
+        <span>CAN: <span id="lives">3</span></span>
     </div>
 
-    <div class="penalty-btns">
-      <button class="penalty-btn" onclick="shootPenalty('sol')">⬅️ SOL</button>
-      <button class="penalty-btn" onclick="shootPenalty('orta')">⬆️ ORTA</button>
-      <button class="penalty-btn" onclick="shootPenalty('sag')">➡️ SAĞ</button>
+    <div class="content">
+        <div class="visitor-card">
+            <small>KAPIDAKİ ZİYARETÇİ</small>
+            <div class="visitor-name" id="current-visitor">...</div>
+        </div>
+
+        <div class="input-group">
+            <label for="name-input">İsmi Doğrula / Tara:</label>
+            <input type="text" id="name-input" placeholder="İsmi buraya yazın..." autocomplete="off">
+            <button class="btn-scan" onclick="analyzeName()">SİSTEMDE TARA</button>
+        </div>
+
+        <div class="analysis-box" id="analysis-result">
+            İsmi yazıp 'SİSTEMDE TARA' butonuna basın.
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-accept" onclick="makeDecision(true)">KABUL ET</button>
+            <button class="btn-reject" onclick="makeDecision(false)">REDDET</button>
+        </div>
     </div>
-  </div>
 </div>
 
 <script>
-  // Orijinal Premier League 20 Takımı (ESPN PNG CDN Kimlikleri ile)
-  const masterPremierLeagueTeams = [
-    { name: "Arsenal", espnId: "359", budget: 85, rating: 86, squad: [{name: "Bukayo Saka", ovr: 89, price: 82}, {name: "Martin Ødegaard", ovr: 88, price: 78}, {name: "Declan Rice", ovr: 87, price: 72}, {name: "William Saliba", ovr: 87, price: 70}] },
-    { name: "Aston Villa", espnId: "362", budget: 45, rating: 80, squad: [{name: "Ollie Watkins", ovr: 85, price: 55}, {name: "Emiliano Martínez", ovr: 86, price: 42}, {name: "Youri Tielemans", ovr: 81, price: 28}] },
-    { name: "Bournemouth", espnId: "349", budget: 25, rating: 76, squad: [{name: "Antoine Semenyo", ovr: 78, price: 20}, {name: "Evanilson", ovr: 79, price: 26}, {name: "Kepa Arrizabalaga", ovr: 77, price: 15}] },
-    { name: "Brentford", espnId: "337", budget: 20, rating: 75, squad: [{name: "Yoane Wissa", ovr: 79, price: 22}, {name: "Bryan Mbeumo", ovr: 81, price: 34}, {name: "Mark Flekken", ovr: 77, price: 12}] },
-    { name: "Brighton", espnId: "331", budget: 35, rating: 78, squad: [{name: "Kaoru Mitoma", ovr: 82, price: 42}, {name: "João Pedro", ovr: 80, price: 32}, {name: "Carlos Baleba", ovr: 78, price: 25}] },
-    { name: "Chelsea", espnId: "363", budget: 90, rating: 84, squad: [{name: "Cole Palmer", ovr: 87, price: 80}, {name: "Moisés Caicedo", ovr: 83, price: 50}, {name: "Enzo Fernández", ovr: 82, price: 45}] },
-    { name: "Crystal Palace", espnId: "384", budget: 25, rating: 76, squad: [{name: "Eberechi Eze", ovr: 82, price: 44}, {name: "Marc Guéhi", ovr: 81, price: 38}, {name: "Adam Wharton", ovr: 78, price: 26}] },
-    { name: "Everton", espnId: "368", budget: 20, rating: 75, squad: [{name: "Jarrad Branthwaite", ovr: 80, price: 35}, {name: "Jordan Pickford", ovr: 82, price: 28}, {name: "Iliman Ndiaye", ovr: 77, price: 18}] },
-    { name: "Fulham", espnId: "370", budget: 30, rating: 77, squad: [{name: "Emile Smith Rowe", ovr: 79, price: 28}, {name: "Bernd Leno", ovr: 81, price: 20}, {name: "Antonee Robinson", ovr: 80, price: 26}] },
-    { name: "Ipswich Town", espnId: "354", budget: 15, rating: 72, squad: [{name: "Liam Delap", ovr: 75, price: 16}, {name: "Omari Hutchinson", ovr: 74, price: 14}, {name: "Kalvin Phillips", ovr: 74, price: 10}] },
-    { name: "Leicester City", espnId: "375", budget: 20, rating: 74, squad: [{name: "Harry Winks", ovr: 76, price: 14}, {name: "Abdul Fatawu", ovr: 75, price: 18}, {name: "Jamie Vardy", ovr: 76, price: 8}] },
-    { name: "Liverpool", espnId: "364", budget: 95, rating: 87, squad: [{name: "Mohamed Salah", ovr: 89, price: 75}, {name: "Virgil van Dijk", ovr: 89, price: 65}, {name: "Alisson Becker", ovr: 88, price: 50}] },
-    { name: "Manchester City", espnId: "382", budget: 100, rating: 88, squad: [{name: "Erling Haaland", ovr: 91, price: 95}, {name: "Kevin De Bruyne", ovr: 89, price: 60}, {name: "Phil Foden", ovr: 88, price: 80}] },
-    { name: "Manchester United", espnId: "360", budget: 80, rating: 83, squad: [{name: "Bruno Fernandes", ovr: 87, price: 60}, {name: "Alejandro Garnacho", ovr: 81, price: 45}, {name: "Kobbie Mainoo", ovr: 80, price: 42}] },
-    { name: "Newcastle United", espnId: "361", budget: 60, rating: 81, squad: [{name: "Alexander Isak", ovr: 85, price: 68}, {name: "Bruno Guimarães", ovr: 85, price: 58}, {name: "Anthony Gordon", ovr: 82, price: 46}] },
-    { name: "Nottingham Forest", espnId: "385", budget: 25, rating: 76, squad: [{name: "Morgan Gibbs-White", ovr: 81, price: 36}, {name: "Murillo", ovr: 80, price: 32}, {name: "Anthony Elanga", ovr: 77, price: 20}] },
-    { name: "Southampton", espnId: "376", budget: 18, rating: 73, squad: [{name: "Mateus Fernandes", ovr: 75, price: 15}, {name: "Aaron Ramsdale", ovr: 78, price: 18}, {name: "Flynn Downes", ovr: 73, price: 9}] },
-    { name: "Tottenham Hotspur", espnId: "367", budget: 70, rating: 82, squad: [{name: "Son Heung-min", ovr: 87, price: 52}, {name: "James Maddison", ovr: 84, price: 44}, {name: "Cristian Romero", ovr: 84, price: 42}] },
-    { name: "West Ham United", espnId: "371", budget: 40, rating: 79, squad: [{name: "Mohammed Kudus", ovr: 83, price: 48}, {name: "Jarrod Bowen", ovr: 83, price: 45}, {name: "Lucas Paquetá", ovr: 82, price: 38}] },
-    { name: "Wolverhampton", espnId: "380", budget: 22, rating: 75, squad: [{name: "Matheus Cunha", ovr: 81, price: 35}, {name: "Rayán Aït-Nouri", ovr: 79, price: 25}, {name: "José Sá", ovr: 78, price: 15}] }
-  ];
+    const sampleNames = ["KAYAK", "AZA", "AXZEL", "SERKAN", "MEHMET", "NILIN", "BOB", "ZARTX", "ALİ", "EFE"];
+    let currentVisitorName = "";
+    let score = 0;
+    let lives = 3;
+    let isThreat = false;
 
-  let leagueTeams = [];
-  let managerState = {
-    name: "",
-    myTeamIndex: -1,
-    budget: 0,
-    debt: 0,
-    week: 1,
-    nextMatchFixed: false,
-    penaltyGoalAdded: 0
-  };
-
-  let schedule = [];
-
-  function getLogoHTML(team) {
-    let url = `https://a.espncdn.com/i/teamlogos/soccer/500/${team.espnId}.png`;
-    let fallbackText = team.name.substring(0,2).toUpperCase();
-    return `<img class="team-logo" src="${url}" alt="${team.name}" onerror="this.remove();">
-            <div class="fallback-badge">${fallbackText}</div>`;
-  }
-
-  function startGame() {
-    const input = document.getElementById('managerNameInput').value.trim();
-    if (!input) return alert("Lütfen bir menajer adı girin!");
-    managerState.name = input;
-
-    // Derin kopyalama ile takımları al ve Fisher-Yates karıştırma algoritması uygula
-    leagueTeams = JSON.parse(JSON.stringify(masterPremierLeagueTeams));
-    
-    for (let i = leagueTeams.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [leagueTeams[i], leagueTeams[j]] = [leagueTeams[j], leagueTeams[i]];
+    function nextVisitor() {
+        if (lives <= 0) return;
+        
+        currentVisitorName = sampleNames[Math.floor(Math.random() * sampleNames.length)];
+        document.getElementById('current-visitor').innerText = currentVisitorName;
+        document.getElementById('name-input').value = "";
+        document.getElementById('analysis-result').innerText = "İsmi yazıp 'SİSTEMDE TARA' butonuna basın.";
+        document.getElementById('analysis-result').style.color = "inherit";
+        
+        // Tehdit analizi (Gizli kural)
+        let cleanName = currentVisitorName.toUpperCase();
+        let reversed = cleanName.split('').reverse().join('');
+        
+        // Kural: Palindrom ise (Robot) VEYA içinde XZ geçiyorsa (Uzaylı) TEHDİTTİR.
+        isThreat = (cleanName === reversed && cleanName.length > 1) || cleanName.includes("XZ");
     }
 
-    leagueTeams.forEach(t => { t.played = 0; t.won = 0; t.drawn = 0; t.lost = 0; t.points = 0; });
+    function analyzeName() {
+        let inputVal = document.getElementById('name-input').value.trim().toUpperCase();
+        let resultBox = document.getElementById('analysis-result');
 
-    // Rastgele karışan diziden 0. indeksteki takımı menajere ver
-    managerState.myTeamIndex = Math.floor(Math.random() * leagueTeams.length);
-    let myTeam = leagueTeams[managerState.myTeamIndex];
-    managerState.budget = myTeam.budget;
-
-    generateSchedule();
-
-    document.getElementById('setupScreen').style.display = 'none';
-    document.getElementById('gameScreen').style.display = 'block';
-
-    setupTransferFilters();
-    updateUI();
-  }
-
-  function generateSchedule() {
-    let n = leagueTeams.length;
-    for (let round = 0; round < (n - 1) * 2; round++) {
-      let matches = [];
-      let isSecondHalf = round >= (n - 1);
-      let r = isSecondHalf ? round - (n - 1) : round;
-
-      for (let i = 0; i < n / 2; i++) {
-        let home = (r + i) % (n - 1);
-        let away = (n - 1 - i + r) % (n - 1);
-        if (i === 0) away = n - 1;
-
-        if (isSecondHalf) matches.push({ home: away, away: home });
-        else matches.push({ home: home, away: away });
-      }
-      schedule.push(matches);
-    }
-  }
-
-  function updateUI() {
-    let myTeam = leagueTeams[managerState.myTeamIndex];
-
-    document.getElementById('dispManagerName').innerText = managerState.name;
-    document.getElementById('dispClubName').innerText = `Takım: ${myTeam.name}`;
-    document.getElementById('dispBudget').innerText = managerState.budget.toFixed(1);
-    document.getElementById('dispRating').innerText = myTeam.rating;
-    document.getElementById('dispWeek').innerText = `${managerState.week} / 38`;
-    document.getElementById('dispPoints').innerText = myTeam.points;
-    document.getElementById('dispDebt').innerText = managerState.debt.toFixed(1);
-    document.getElementById('loanVal').innerText = managerState.debt.toFixed(1);
-
-    if (managerState.week <= 38) {
-      document.getElementById('matchRoundTitle').innerText = `HAFTA ${managerState.week} - PREMIER LEAGUE`;
-      let weekMatches = schedule[managerState.week - 1];
-      let myMatch = weekMatches.find(m => m.home === managerState.myTeamIndex || m.away === managerState.myTeamIndex);
-
-      let homeTeam = leagueTeams[myMatch.home];
-      let awayTeam = leagueTeams[myMatch.away];
-
-      document.getElementById('homeTeamName').innerText = homeTeam.name;
-      document.getElementById('homeLogoBox').innerHTML = getLogoHTML(homeTeam);
-      document.getElementById('awayTeamName').innerText = awayTeam.name;
-      document.getElementById('awayLogoBox').innerHTML = getLogoHTML(awayTeam);
-    }
-
-    renderSquad();
-    renderLeagueTable();
-  }
-
-  function renderSquad() {
-    let myTeam = leagueTeams[managerState.myTeamIndex];
-    const squadBox = document.getElementById('squadList');
-    squadBox.innerHTML = '';
-    myTeam.squad.forEach(p => {
-      squadBox.innerHTML += `
-        <div class="item-card">
-          <div class="item-info">
-            <div class="item-title">⚽ ${p.name} <span class="player-rating-badge">${p.ovr}</span></div>
-            <div class="item-sub">Kulüp Oyuncusu • Değer: £${p.price}M</div>
-          </div>
-        </div>`;
-    });
-  }
-
-  function renderLeagueTable() {
-    let sortedTeams = [...leagueTeams].sort((a, b) => b.points - a.points || b.rating - a.rating);
-    const tbody = document.getElementById('leagueTableBody');
-    tbody.innerHTML = '';
-
-    sortedTeams.forEach((t, index) => {
-      let isMyTeam = t.name === leagueTeams[managerState.myTeamIndex].name;
-      tbody.innerHTML += `
-        <tr class="${isMyTeam ? 'my-team' : ''}">
-          <td>${index + 1}</td>
-          <td style="text-align: left;">${t.name}</td>
-          <td>${t.played}</td>
-          <td>${t.won}</td>
-          <td>${t.drawn}</td>
-          <td>${t.lost}</td>
-          <td><b>${t.points}</b></td>
-        </tr>`;
-    });
-  }
-
-  function initiateMatch() {
-    if (managerState.week > 38) return;
-
-    if (Math.random() < 0.25 && !managerState.nextMatchFixed) {
-      document.getElementById('penaltyModal').style.display = 'flex';
-      document.getElementById('gkIcon').style.left = '45%';
-    } else {
-      executePlayMatch();
-    }
-  }
-
-  function shootPenalty(userChoice) {
-    let corners = ['sol', 'orta', 'sag'];
-    let gkChoice = corners[Math.floor(Math.random() * corners.length)];
-    let gkIcon = document.getElementById('gkIcon');
-
-    if (gkChoice === 'sol') gkIcon.style.left = '10%';
-    else if (gkChoice === 'orta') gkIcon.style.left = '45%';
-    else gkIcon.style.left = '80%';
-
-    setTimeout(() => {
-      if (userChoice !== gkChoice) {
-        alert("GOOOOL! Penaltı golle sonuçlandı! 🎉");
-        managerState.penaltyGoalAdded = 1;
-      } else {
-        alert("PENALTI KAÇTI! Kaleci köşeyi doğru tahmin etti! 🧤");
-        managerState.penaltyGoalAdded = 0;
-      }
-      document.getElementById('penaltyModal').style.display = 'none';
-      executePlayMatch();
-    }, 400);
-  }
-
-  function executePlayMatch() {
-    let weekMatches = schedule[managerState.week - 1];
-
-    weekMatches.forEach(m => {
-      let home = leagueTeams[m.home];
-      let away = leagueTeams[m.away];
-      let hGoals = 0, aGoals = 0;
-
-      if (m.home === managerState.myTeamIndex || m.away === managerState.myTeamIndex) {
-        if (managerState.nextMatchFixed) {
-          if (Math.random() < 0.15) {
-            alert("ŞİKE TESPİT EDİLDİ! Küme düşürüldünüz.");
-            location.reload(); return;
-          }
-          if (m.home === managerState.myTeamIndex) { hGoals = 3; aGoals = 0; }
-          else { hGoals = 0; aGoals = 3; }
-          managerState.nextMatchFixed = false;
-        } else {
-          hGoals = Math.floor(Math.random() * (home.rating / 24));
-          aGoals = Math.floor(Math.random() * (away.rating / 24));
-
-          if (m.home === managerState.myTeamIndex) hGoals += managerState.penaltyGoalAdded;
-          else aGoals += managerState.penaltyGoalAdded;
-          managerState.penaltyGoalAdded = 0;
+        if (inputVal === "") {
+            resultBox.innerText = "Lütfen önce ismi yazın!";
+            return;
         }
 
-        let extraMin = Math.floor(Math.random() * 5) + 1;
-        document.getElementById('scoreDisplay').innerText = `${hGoals} - ${aGoals}`;
-        document.getElementById('matchTimeDisplay').innerText = `MAÇ SONU (90+${extraMin}')`;
+        let reversed = inputVal.split('').reverse().join('');
 
-        let isHome = m.home === managerState.myTeamIndex;
-        let myGoals = isHome ? hGoals : aGoals;
-        let oppGoals = isHome ? aGoals : hGoals;
-
-        if (myGoals > oppGoals) managerState.budget += 2.0;
-        else if (myGoals === oppGoals) managerState.budget += 0.8;
-      } else {
-        hGoals = Math.floor(Math.random() * (home.rating / 25));
-        aGoals = Math.floor(Math.random() * (away.rating / 25));
-      }
-
-      home.played++; away.played++;
-      if (hGoals > aGoals) { home.won++; home.points += 3; away.lost++; }
-      else if (hGoals === aGoals) { home.drawn++; home.points += 1; away.drawn++; away.points += 1; }
-      else { away.won++; away.points += 3; home.lost++; }
-    });
-
-    managerState.week++;
-
-    if (managerState.week > 38) {
-      document.getElementById('playMatchBtn').disabled = true;
-      document.getElementById('playMatchBtn').innerText = "SEZON BİTTİ";
-      let champion = [...leagueTeams].sort((a, b) => b.points - a.points)[0];
-      setTimeout(() => alert(`🏆 ŞAMPIYON: ${champion.name} (${champion.points} Puan)`), 500);
+        if (inputVal === reversed && inputVal.length > 1) {
+            resultBox.innerText = "UYARI: Palindrom isim! (Robot Şüphesi)";
+            resultBox.style.color = "red";
+        } else if (inputVal.includes("XZ")) {
+            resultBox.innerText = "UYARI: Yasak kod birleşimi! (Uzaylı Şüphesi)";
+            resultBox.style.color = "red";
+        } else {
+            resultBox.innerText = "TEMİZ: Şüpheli harf dizilimi saptanmadı.";
+            resultBox.style.color = "green";
+        }
     }
 
-    updateUI();
-  }
+    function makeDecision(accepted) {
+        if (lives <= 0) return;
 
-  function setupTransferFilters() {
-    const select = document.getElementById('teamFilter');
-    select.innerHTML = '';
-    leagueTeams.forEach((t, idx) => {
-      if (idx !== managerState.myTeamIndex) select.innerHTML += `<option value="${idx}">${t.name}</option>`;
-    });
-    renderTransferMarket();
-  }
+        // Doğru karar: Tehditse reddetmek (false) veya Temizse kabul etmek (true)
+        if ((isThreat && !accepted) || (!isThreat && accepted)) {
+            score += 10;
+            document.getElementById('score').innerText = score;
+            alert("DOĞRU KARAR!");
+        } else {
+            lives -= 1;
+            document.getElementById('lives').innerText = lives;
+            alert("YANLIŞ KARAR!");
+        }
 
-  function renderTransferMarket() {
-    const targetTeamIdx = document.getElementById('teamFilter').value;
-    const targetTeam = leagueTeams[targetTeamIdx];
-    const marketBox = document.getElementById('transferList');
-    marketBox.innerHTML = '';
-
-    if (!targetTeam || targetTeam.squad.length === 0) {
-      marketBox.innerHTML = '<div style="font-size: 12px; color: var(--text-muted);">Satılık oyuncu kalmadı.</div>';
-      return;
+        if (lives <= 0) {
+            alert("OYUN BİTTİ! Toplam Puanın: " + score);
+            location.reload();
+        } else {
+            nextVisitor();
+        }
     }
 
-    targetTeam.squad.forEach((player, pIdx) => {
-      marketBox.innerHTML += `
-        <div class="item-card">
-          <div class="item-info">
-            <div class="item-title">⚽ ${player.name} <span class="player-rating-badge">${player.ovr}</span></div>
-            <div class="item-sub">Kulüp: ${targetTeam.name} | Bonservis: £${player.price}M</div>
-          </div>
-          <button class="btn" onclick="buyPlayerFromTeam(${targetTeamIdx}, ${pIdx}, ${player.price})">Satın Al</button>
-        </div>`;
-    });
-  }
-
-  function buyPlayerFromTeam(teamIdx, playerIdx, price) {
-    if (managerState.budget >= price) {
-      let sellerTeam = leagueTeams[teamIdx];
-      let playerObj = sellerTeam.squad.splice(playerIdx, 1)[0];
-      managerState.budget -= price;
-      leagueTeams[managerState.myTeamIndex].squad.push(playerObj);
-      leagueTeams[managerState.myTeamIndex].rating += 1;
-      updateUI(); renderTransferMarket();
-    } else {
-      alert("Bütçe yetersiz!");
-    }
-  }
-
-  function switchTab(tabName) {
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    event.target.classList.add('active');
-    document.getElementById(`tab-${tabName}`).classList.add('active');
-  }
-
-  function takeLoan(amt) { managerState.budget += amt; managerState.debt += amt * 1.2; updateUI(); }
-  function payLoan(amt) { if (managerState.budget >= amt && managerState.debt > 0) { managerState.budget -= amt; managerState.debt -= amt; updateUI(); } }
-  function fightBoard() { if (Math.random() < 0.2) { alert("Kovuldunuz!"); location.reload(); } else managerState.budget += 15; updateUI(); }
-  function fightPlayer() { leagueTeams[managerState.myTeamIndex].rating += (Math.random() < 0.5 ? 1 : -1); updateUI(); }
-  function attackFan() { managerState.budget -= 5; updateUI(); }
-  function fixMatch() { if (managerState.budget >= 5) { managerState.budget -= 5; managerState.nextMatchFixed = true; alert("Şike ayarlandı!"); updateUI(); } }
-  function resignJob() { if (confirm("İstifa etmek istediğinize emin misiniz?")) location.reload(); }
+    // Oyunu Başlat
+    nextVisitor();
 </script>
 
 </body>
