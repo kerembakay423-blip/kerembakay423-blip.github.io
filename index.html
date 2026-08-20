@@ -3,266 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kimlik Hırsızı - Güvenlik Terminali</title>
+    <title>Kick Off Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-blue: #ebf8ff;
-            --primary-blue: #2563eb;
-            --dark-blue: #1e3a8a;
-            --light-blue: #dbeafe;
-            --white: #ffffff;
-            --danger-red: #ef4444;
-            --success-green: #10b981;
+            --bg-main: #f4f7fe;
+            --surface: #ffffff;
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #3b82f6;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+
+        .app-container {
+            width: 100%; max-width: 1000px; background: var(--surface); border-radius: 20px;
+            box-shadow: var(--shadow); border: 1px solid var(--border); overflow: hidden; min-height: 650px;
+            display: flex; flex-direction: column;
         }
 
-        body {
-            background-color: var(--bg-blue);
-            color: var(--dark-blue);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+        header {
+            background: #ffffff; padding: 15px 30px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
         }
 
-        .terminal-container {
-            background-color: var(--white);
-            border: 3px solid var(--primary-blue);
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.15);
-            width: 100%;
-            max-width: 500px;
-            overflow: hidden;
-        }
+        .logo-box { display: flex; align-items: center; gap: 12px; }
+        .logo-box img { height: 45px; border-radius: 8px; }
+        .logo-title { font-weight: 800; font-size: 1.4rem; color: var(--text-main); letter-spacing: -0.5px; }
 
-        .terminal-header {
-            background-color: var(--primary-blue);
-            color: var(--white);
-            padding: 15px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-        }
+        .screen { display: none; padding: 30px; flex: 1; flex-direction: column; }
+        .screen.active { display: flex; }
 
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            background-color: var(--light-blue);
-            padding: 10px 20px;
-            font-weight: 600;
+        /* KURULUM EKRANI */
+        .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: var(--text-muted); }
+        input[type="text"], select {
+            width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px;
+            font-size: 1rem; background: var(--bg-main); outline: none; transition: 0.2s;
         }
+        input[type="text"]:focus, select:focus { border-color: var(--primary); background: #fff; }
 
-        .content {
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .team-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .team-card {
+            border: 2px solid var(--border); border-radius: 12px; padding: 15px; text-align: center;
+            cursor: pointer; transition: 0.2s; background: var(--surface);
         }
+        .team-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .team-card.selected { border-color: var(--primary); background: #f0fdf4; }
+        .team-card img { height: 50px; object-fit: contain; margin-bottom: 8px; }
+        .team-card h4 { font-size: 0.95rem; font-weight: 700; }
+        .team-card p { font-size: 0.75rem; color: var(--text-muted); }
 
-        .visitor-card {
-            background-color: var(--bg-blue);
-            border: 2px dashed var(--primary-blue);
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
+        .btn {
+            background: var(--primary); color: white; border: none; padding: 14px 28px;
+            border-radius: 10px; font-weight: 700; font-size: 1rem; cursor: pointer;
+            transition: 0.2s; display: inline-flex; justify-content: center; align-items: center; gap: 8px;
         }
+        .btn:hover { background: var(--primary-dark); }
 
-        .visitor-name {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--dark-blue);
-            margin-top: 5px;
-        }
+        /* DASHBOARD & KADRO */
+        .dashboard-layout { display: grid; grid-template-columns: 280px 1fr; gap: 25px; height: 100%; }
+        .sidebar { background: var(--bg-main); padding: 20px; border-radius: 14px; border: 1px solid var(--border); }
+        .main-panel { display: flex; flex-direction: column; gap: 20px; }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+        .squad-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.85rem; }
+        .squad-table th { text-align: left; padding: 10px; background: var(--bg-main); color: var(--text-muted); }
+        .squad-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); }
 
-        label {
-            font-size: 0.9rem;
-            font-weight: 600;
+        /* SKORBOARD & SIMULATION */
+        .scoreboard {
+            background: linear-gradient(135deg, #1e293b, #0f172a); color: white; border-radius: 16px;
+            padding: 25px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
         }
+        .score-team { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 35%; }
+        .score-team img { height: 60px; }
+        .score-display { font-size: 2.5rem; font-weight: 800; letter-spacing: 2px; }
 
-        input[type="text"] {
-            padding: 12px;
-            border: 2px solid var(--light-blue);
-            border-radius: 6px;
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.2s;
-            text-transform: uppercase;
+        .match-log {
+            background: var(--bg-main); border: 1px solid var(--border); border-radius: 12px;
+            padding: 15px; height: 200px; overflow-y: auto; font-size: 0.85rem; display: flex; flex-direction: column; gap: 8px;
         }
-
-        input[type="text"]:focus {
-            border-color: var(--primary-blue);
-        }
-
-        .analysis-box {
-            background-color: var(--light-blue);
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        .btn-accept {
-            background-color: var(--primary-blue);
-            color: var(--white);
-        }
-
-        .btn-reject {
-            background-color: var(--white);
-            color: var(--danger-red);
-            border: 2px solid var(--danger-red);
-        }
-
-        .btn-scan {
-            background-color: var(--dark-blue);
-            color: var(--white);
-            margin-bottom: 5px;
-        }
+        .log-item { padding: 6px 10px; background: white; border-radius: 6px; border-left: 3px solid var(--accent); }
     </style>
 </head>
 <body>
 
-<div class="terminal-container">
-    <div class="terminal-header">GÜVENLİK TERMİNALİ v1.0</div>
-    
-    <div class="stats-bar">
-        <span>PUAN: <span id="score">0</span></span>
-        <span>CAN: <span id="lives">3</span></span>
+<div class="app-container">
+    <header>
+        <div class="logo-box">
+            <img src="KICK OFF.jpg" alt="Logo">
+            <span class="logo-title">KICK OFF MANAGER</span>
+        </div>
+        <div id="user-badge" style="font-weight: 600; font-size: 0.9rem; color: var(--text-muted);"></div>
+    </header>
+
+    <!-- 1. ADIM: MENAJER VE TAKIM SEÇİMİ -->
+    <div id="screen-setup" class="screen active">
+        <h2>Kariyerine Başla</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 15px;">Menajer profilini oluştur ve takımını seç.</p>
+        
+        <div class="setup-grid">
+            <div>
+                <div class="input-group">
+                    <label>Menajer Adı Soyadı</label>
+                    <input type="text" id="manager-name" placeholder="Örn: Alex de Souza">
+                </div>
+                
+                <div class="input-group">
+                    <label>Oyun Taktiği</label>
+                    <select id="tactic-select">
+                        <option value="Tiki-Taka">Tiki-Taka (Pas Kültürü)</option>
+                        <option value="Gegenpressing">Gegenpressing (Şok Pres)</option>
+                        <option value="Park the Bus">Park the Bus (Otobüsü Çekmek)</option>
+                        <option value="Heavy Metal">Heavy Metal Futbolu (Direkt Hücum)</option>
+                        <option value="Juego de Posición">Juego de Posición (Pozisyon Oyunu)</option>
+                        <option value="Katenaçyo">Katenaçyo (Catenaccio)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label>Takım Seçimi</label>
+                <div class="team-selector" id="team-cards"></div>
+            </div>
+        </div>
+
+        <div style="margin-top: auto; text-align: right;">
+            <button class="btn" onclick="startGame()">Kariyere Başla &rarr;</button>
+        </div>
     </div>
 
-    <div class="content">
-        <div class="visitor-card">
-            <small>KAPIDAKİ ZİYARETÇİ</small>
-            <div class="visitor-name" id="current-visitor">...</div>
+    <!-- 2. ADIM: DOKÜMANTASYON & KADRO (PANEL) -->
+    <div id="screen-dashboard" class="screen">
+        <div class="dashboard-layout">
+            <div class="sidebar">
+                <img id="dash-logo" src="" style="height: 60px; display: block; margin: 0 auto 10px;">
+                <h3 id="dash-team" style="text-align: center; font-size: 1.1rem;">-</h3>
+                <p id="dash-td" style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px;">-</p>
+                
+                <div class="input-group">
+                    <label>Aktif Taktik</label>
+                    <select id="dash-tactic-change" onchange="updateTactic()">
+                        <option value="Tiki-Taka">Tiki-Taka</option>
+                        <option value="Gegenpressing">Gegenpressing</option>
+                        <option value="Park the Bus">Park the Bus</option>
+                        <option value="Heavy Metal">Heavy Metal</option>
+                        <option value="Juego de Posición">Juego de Posición</option>
+                        <option value="Katenaçyo">Katenaçyo</option>
+                    </select>
+                </div>
+
+                <button class="btn" style="width: 100%; margin-top: 15px;" onclick="prepareMatch()">Maça Çık &rarr;</button>
+            </div>
+
+            <div class="main-panel">
+                <h3>Takım Kadrosu</h3>
+                <div style="overflow-y: auto; max-height: 420px;">
+                    <table class="squad-table">
+                        <thead>
+                            <tr><th>Mevki</th><th>Oyuncu</th><th>Yaş</th><th>Reyting</th></tr>
+                        </thead>
+                        <tbody id="squad-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. ADIM: MAÇ SİMÜLASYONU -->
+    <div id="screen-match" class="screen">
+        <div class="scoreboard">
+            <div class="score-team">
+                <img id="home-logo" src="">
+                <h3 id="home-name">Ev</h3>
+            </div>
+            <div class="score-display"><span id="home-score">0</span> - <span id="away-score">0</span></div>
+            <div class="score-team">
+                <img id="away-logo" src="">
+                <h3 id="away-name">Deplasman</h3>
+            </div>
         </div>
 
-        <div class="input-group">
-            <label for="name-input">İsmi Doğrula / Tara:</label>
-            <input type="text" id="name-input" placeholder="İsmi buraya yazın..." autocomplete="off">
-            <button class="btn-scan" onclick="analyzeName()">SİSTEMDE TARA</button>
-        </div>
+        <div class="match-log" id="match-log"></div>
 
-        <div class="analysis-box" id="analysis-result">
-            İsmi yazıp 'SİSTEMDE TARA' butonuna basın.
-        </div>
-
-        <div class="action-buttons">
-            <button class="btn-accept" onclick="makeDecision(true)">KABUL ET</button>
-            <button class="btn-reject" onclick="makeDecision(false)">REDDET</button>
+        <div style="margin-top: 20px; text-align: center;">
+            <button id="sim-btn" class="btn" onclick="runSimulation()">Simülasyonu Başlat</button>
+            <button id="back-btn" class="btn" style="display:none;" onclick="showScreen('screen-dashboard')">Panele Dön</button>
         </div>
     </div>
 </div>
 
 <script>
-    const sampleNames = ["KAYAK", "AZA", "AXZEL", "SERKAN", "MEHMET", "NILIN", "BOB", "ZARTX", "ALİ", "EFE"];
-    let currentVisitorName = "";
-    let score = 0;
-    let lives = 3;
-    let isThreat = false;
+    // VERİ TABANI (FC 26 Ortalama Reytingleri ile Entegre)
+    const teamsData = {
+        "Hull City": {
+            logo: "image_b467f8.png", td: "Sergej Jakirović",
+            squad: [
+                {pos: "GK", name: "Konstantinos Tzolakis", age: 23, rating: 74},
+                {pos: "GK", name: "Jack Butland", age: 33, rating: 72},
+                {pos: "CB", name: "Charlie Hughes", age: 22, rating: 71},
+                {pos: "LB", name: "Ryan Giles", age: 26, rating: 73},
+                {pos: "CDM", name: "Lucas Gourna-Douath", age: 23, rating: 75},
+                {pos: "CM", name: "Hidemasa Morita", age: 31, rating: 77},
+                {pos: "RM", name: "Abdülkadir Ömür", age: 27, rating: 74},
+                {pos: "ST", name: "Joe Gelhardt", age: 24, rating: 72}
+            ]
+        },
+        "Çorum FK": {
+            logo: "image_b46780.png", td: "Uğur Uçar",
+            squad: [
+                {pos: "GK", name: "Marcos Felipe", age: 30, rating: 73},
+                {pos: "CB", name: "Alexandre Penetra", age: 24, rating: 74},
+                {pos: "LB", name: "Andrei Borza", age: 20, rating: 70},
+                {pos: "CDM", name: "Berat Özdemir", age: 28, rating: 72},
+                {pos: "CM", name: "Mohamed Diomandé", age: 24, rating: 75},
+                {pos: "LW", name: "Alexandros Kyziridis", age: 25, rating: 69},
+                {pos: "ST", name: "Jesús Ramírez", age: 28, rating: 71},
+                {pos: "ST", name: "Mame Thiam", age: 33, rating: 73}
+            ]
+        },
+        "SC Paderborn 07": {
+            logo: "image_b467a7.png", td: "Ralf Kettemann",
+            squad: [
+                {pos: "GK", name: "Nahuel Noll", age: 23, rating: 68},
+                {pos: "CB", name: "Mattes Hansen", age: 22, rating: 67},
+                {pos: "CDM", name: "Santiago Castañeda", age: 21, rating: 70},
+                {pos: "CM", name: "Laurin Ulrich", age: 21, rating: 68},
+                {pos: "CAM", name: "Oliver Batista Meier", age: 25, rating: 71},
+                {pos: "LW", name: "Deniz Zeitler", age: 19, rating: 66},
+                {pos: "ST", name: "Kennedy Okpala", age: 21, rating: 67}
+            ]
+        },
+        "AC Monza": {
+            logo: "image_b415a9.png", td: "Ivan Jurić",
+            squad: [
+                {pos: "GK", name: "Demba Thiam", age: 28, rating: 71},
+                {pos: "CB", name: "Lorenzo Lucchesi", age: 23, rating: 72},
+                {pos: "CM", name: "Ebenezer Akinsanmiro", age: 21, rating: 73},
+                {pos: "CM", name: "Matteo Pessina", age: 29, rating: 77},
+                {pos: "CAM", name: "Andrea Colpani", age: 27, rating: 77},
+                {pos: "LW", name: "Jay Robinson", age: 19, rating: 68},
+                {pos: "ST", name: "Patrick Cutrone", age: 28, rating: 75}
+            ]
+        },
+        "Malaga CF": {
+            logo: "image_b4150f.png", td: "Juan Francisco Funes",
+            squad: [
+                {pos: "GK", name: "Alfonso Herrero", age: 32, rating: 73},
+                {pos: "CB", name: "Fernando Calero", age: 30, rating: 71},
+                {pos: "CM", name: "Izan Merino", age: 20, rating: 68},
+                {pos: "RW", name: "David Larrubia", age: 24, rating: 72},
+                {pos: "ST", name: "Chupe", age: 21, rating: 74},
+                {pos: "ST", name: "Adrián Niño", age: 22, rating: 70}
+            ]
+        },
+        "Le Havre AC": {
+            logo: "image_b46742.png", td: "Didier Digard",
+            squad: [
+                {pos: "GK", name: "Mory Diaw", age: 33, rating: 74},
+                {pos: "CB", name: "Ayumu Seko", age: 26, rating: 73},
+                {pos: "CDM", name: "Junior Mwanga", age: 23, rating: 74},
+                {pos: "CM", name: "Rassoul Ndiaye", age: 24, rating: 73},
+                {pos: "ST", name: "Josh Maja", age: 27, rating: 72}
+            ]
+        }
+    };
 
-    function nextVisitor() {
-        if (lives <= 0) return;
-        
-        currentVisitorName = sampleNames[Math.floor(Math.random() * sampleNames.length)];
-        document.getElementById('current-visitor').innerText = currentVisitorName;
-        document.getElementById('name-input').value = "";
-        document.getElementById('analysis-result').innerText = "İsmi yazıp 'SİSTEMDE TARA' butonuna basın.";
-        document.getElementById('analysis-result').style.color = "inherit";
-        
-        // Tehdit analizi (Gizli kural)
-        let cleanName = currentVisitorName.toUpperCase();
-        let reversed = cleanName.split('').reverse().join('');
-        
-        // Kural: Palindrom ise (Robot) VEYA içinde XZ geçiyorsa (Uzaylı) TEHDİTTİR.
-        isThreat = (cleanName === reversed && cleanName.length > 1) || cleanName.includes("XZ");
+    let gameState = { manager: "", team: "", tactic: "" };
+
+    // Ekran Değiştirici
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
     }
 
-    function analyzeName() {
-        let inputVal = document.getElementById('name-input').value.trim().toUpperCase();
-        let resultBox = document.getElementById('analysis-result');
+    // Takım Kartlarını Yükle
+    const teamSelector = document.getElementById('team-cards');
+    Object.keys(teamsData).forEach(teamName => {
+        const card = document.createElement('div');
+        card.className = 'team-card';
+        card.onclick = () => {
+            document.querySelectorAll('.team-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            gameState.team = teamName;
+        };
+        card.innerHTML = `<img src="${teamsData[teamName].logo}"><h4>${teamName}</h4><p>TD: ${teamsData[teamName].td}</p>`;
+        teamSelector.appendChild(card);
+    });
 
-        if (inputVal === "") {
-            resultBox.innerText = "Lütfen önce ismi yazın!";
-            return;
-        }
+    function startGame() {
+        const name = document.getElementById('manager-name').value;
+        if (!name || !gameState.team) return alert("Lütfen isim ve takım seçiniz!");
+        
+        gameState.manager = name;
+        gameState.tactic = document.getElementById('tactic-select').value;
 
-        let reversed = inputVal.split('').reverse().join('');
+        document.getElementById('user-badge').innerText = `${gameState.manager} (${gameState.team})`;
+        document.getElementById('dash-logo').src = teamsData[gameState.team].logo;
+        document.getElementById('dash-team').innerText = gameState.team;
+        document.getElementById('dash-td').innerText = "Teknik Direktör: " + teamsData[gameState.team].td;
+        document.getElementById('dash-tactic-change').value = gameState.tactic;
 
-        if (inputVal === reversed && inputVal.length > 1) {
-            resultBox.innerText = "UYARI: Palindrom isim! (Robot Şüphesi)";
-            resultBox.style.color = "red";
-        } else if (inputVal.includes("XZ")) {
-            resultBox.innerText = "UYARI: Yasak kod birleşimi! (Uzaylı Şüphesi)";
-            resultBox.style.color = "red";
-        } else {
-            resultBox.innerText = "TEMİZ: Şüpheli harf dizilimi saptanmadı.";
-            resultBox.style.color = "green";
-        }
+        // Kadro Tablosunu Doldur
+        const squadBody = document.getElementById('squad-body');
+        squadBody.innerHTML = "";
+        teamsData[gameState.team].squad.forEach(p => {
+            squadBody.innerHTML += `<tr><td><b>${p.pos}</b></td><td>${p.name}</td><td>${p.age}</td><td><b>${p.rating}</b></td></tr>`;
+        });
+
+        showScreen('screen-dashboard');
     }
 
-    function makeDecision(accepted) {
-        if (lives <= 0) return;
-
-        // Doğru karar: Tehditse reddetmek (false) veya Temizse kabul etmek (true)
-        if ((isThreat && !accepted) || (!isThreat && accepted)) {
-            score += 10;
-            document.getElementById('score').innerText = score;
-            alert("DOĞRU KARAR!");
-        } else {
-            lives -= 1;
-            document.getElementById('lives').innerText = lives;
-            alert("YANLIŞ KARAR!");
-        }
-
-        if (lives <= 0) {
-            alert("OYUN BİTTİ! Toplam Puanın: " + score);
-            location.reload();
-        } else {
-            nextVisitor();
-        }
+    function updateTactic() {
+        gameState.tactic = document.getElementById('dash-tactic-change').value;
     }
 
-    // Oyunu Başlat
-    nextVisitor();
+    function prepareMatch() {
+        const opponentList = Object.keys(teamsData).filter(t => t !== gameState.team);
+        const opponent = opponentList[Math.floor(Math.random() * opponentList.length)];
+        
+        document.getElementById('home-name').innerText = gameState.team;
+        document.getElementById('home-logo').src = teamsData[gameState.team].logo;
+        document.getElementById('away-name').innerText = opponent;
+        document.getElementById('away-logo').src = teamsData[opponent].logo;
+        
+        document.getElementById('home-score').innerText = "0";
+        document.getElementById('away-score').innerText = "0";
+        document.getElementById('match-log').innerHTML = "<div class='log-item'>Maç başlamak üzere...</div>";
+        
+        document.getElementById('sim-btn').style.display = "inline-flex";
+        document.getElementById('back-btn').style.display = "none";
+
+        showScreen('screen-match');
+    }
+
+    function runSimulation() {
+        document.getElementById('sim-btn').style.display = "none";
+        let homeScore = 0, awayScore = 0;
+        const log = document.getElementById('match-log');
+        log.innerHTML = "";
+
+        let minute = 0;
+        const interval = setInterval(() => {
+            minute += 15;
+            
+            // Taktik Etkisi ve Şans Faktörü
+            if (Math.random() > 0.6) {
+                if (Math.random() > 0.45) {
+                    homeScore++;
+                    document.getElementById('home-score').innerText = homeScore;
+                    log.innerHTML += `<div class='log-item'><b>${minute}' DAKİKA:</b> GOL! ${gameState.team} [${gameState.tactic}] taktiği ile skoru buldu!</div>`;
+                } else {
+                    awayScore++;
+                    document.getElementById('away-score').innerText = awayScore;
+                    log.innerHTML += `<div class='log-item'><b>${minute}' DAKİKA:</b> GOL! Rakip takım tehlikeli bir atakla golü attı.</div>`;
+                }
+            } else {
+                log.innerHTML += `<div class='log-item'>${minute}' Orta saha mücadelesiyle geçiyor...</div>`;
+            }
+            
+            log.scrollTop = log.scrollHeight;
+
+            if (minute >= 90) {
+                clearInterval(interval);
+                log.innerHTML += `<div class='log-item' style='border-color:var(--primary);'><b>MAÇ BİTTİ!</b> MS: ${homeScore} - ${awayScore}</div>`;
+                document.getElementById('back-btn').style.display = "inline-flex";
+            }
+        }, 800);
+    }
 </script>
-
 </body>
 </html>
